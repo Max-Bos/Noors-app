@@ -268,6 +268,77 @@
     <div style="flex:1;overflow-y:auto" id="diff-body"></div>
   </div>
 
+  <!-- ══ TYPEMODE ══════════════════════════════════ -->
+  <div class="page" id="page-type">
+    <div class="page-head"><div class="page-title">Type<span>modus</span></div><div class="page-sub">Typ het antwoord — fouten komen terug</div></div>
+    <!-- Setup -->
+    <div id="type-setup-wrap" style="padding:0 1.25rem;flex:1;overflow-y:auto">
+      <div class="setup-group">
+        <label>Wat wil je oefenen?</label>
+        <div class="option-row" id="type-cat-opts" data-opt-group>
+          <button class="opt-btn active" data-val="all">Alles</button>
+          <button class="opt-btn" data-val="words">Woorden</button>
+          <button class="opt-btn" data-val="phrases">Zinnen</button>
+          <button class="opt-btn" data-val="unknown">Onbekend</button>
+        </div>
+      </div>
+      <div class="setup-group">
+        <label>Richting</label>
+        <div class="option-row" id="type-dir-opts" data-opt-group>
+          <button class="opt-btn active" data-val="nl-no">Nederlands → Noors</button>
+          <button class="opt-btn" data-val="no-nl">Noors → Nederlands</button>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" style="margin-top:0.5rem" id="type-start-btn">Start typen</button>
+    </div>
+    <!-- Play -->
+    <div class="type-play" id="type-play-wrap">
+      <div class="fc-topbar">
+        <div class="fc-prog-row">
+          <div class="fc-prog-bar"><div class="fc-prog-fill" id="type-pbar" style="width:0%"></div></div>
+          <div class="fc-prog-txt" id="type-ptxt">0/0</div>
+        </div>
+        <div class="fc-badges">
+          <span class="fc-badge remaining" id="type-b-rem">0 over</span>
+          <span class="fc-badge retry" id="type-b-retry">0 herhaling</span>
+          <span class="fc-badge done" id="type-b-done">0 klaar</span>
+        </div>
+      </div>
+      <div class="fc-card-wrap" style="flex:0 0 auto;padding:0.75rem 1.25rem 0">
+        <div class="fc-card" style="height:auto;min-height:160px;transform:none;cursor:default">
+          <div class="fc-face fc-front" style="position:relative;transform:none;backface-visibility:visible;-webkit-backface-visibility:visible;padding:1.25rem 1.5rem">
+            <div class="fc-face-hint" id="type-hint">Vertaal naar Noors</div>
+            <div class="fc-face-word" id="type-word">—</div>
+            <div class="fc-face-cat" id="type-cat"></div>
+            <div class="fc-retry-tag" id="type-retry-tag">herhaling</div>
+          </div>
+        </div>
+      </div>
+      <div class="type-input-wrap" style="padding:0.75rem 1.25rem 0">
+        <input class="type-input" id="type-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Typ je antwoord...">
+      </div>
+      <div id="type-feedback" class="type-feedback"></div>
+      <div class="type-actions">
+        <button class="btn btn-primary btn-full" id="type-submit">Controleer →</button>
+        <button class="btn btn-green btn-full" id="type-next-btn" style="display:none">Volgende →</button>
+        <button class="btn btn-ghost btn-full" id="type-stop-btn">Stoppen</button>
+      </div>
+    </div>
+    <!-- Result -->
+    <div class="result-screen" id="type-result-wrap" style="display:none">
+      <div class="result-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      </div>
+      <div class="result-title">Klaar!</div>
+      <div class="result-score" id="type-res-score">0</div>
+      <div class="result-sub" id="type-res-sub"></div>
+      <div class="result-btns mt1">
+        <button class="btn btn-primary" id="type-retry-btn">Opnieuw</button>
+        <button class="btn btn-ghost" id="type-back-btn">Instellingen</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ══ NAV ═══════════════════════════════════════ -->
   <nav id="nav">
     <button class="nav-item active" data-page="home">
@@ -289,6 +360,10 @@
     <button class="nav-item" data-page="diff">
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg></span>
       <span class="nav-lbl">Moeilijk</span>
+    </button>
+    <button class="nav-item" data-page="type">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M7 8h.01M11 8h.01M15 8h.01M7 12h.01M11 12h.01M15 12h.01M7 16h10"/></svg></span>
+      <span class="nav-lbl">Typen</span>
     </button>
   </nav>
 
