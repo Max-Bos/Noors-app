@@ -145,6 +145,14 @@ body::after {
 .sc-val { font-size:1.4rem; font-weight:900; color:var(--warm-l); line-height:1; }
 .sc-lbl { font-size:0.65rem; color:#9a7a40; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
 
+.daily-streak-card {
+  margin:0 1.25rem 0.55rem;
+  background:linear-gradient(135deg, #e8f5e9, #c8e6c2);
+  border:1px solid #b0d4a8;
+  border-radius:var(--radius); padding:1rem 1.1rem;
+  display:flex; align-items:center; gap:0.9rem;
+}
+
 /* ── BUTTONS ── */
 .btn {
   display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;
