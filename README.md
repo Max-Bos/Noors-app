@@ -80,14 +80,14 @@ De app opent daarna zonder browserbalk als echte standalone app.
 
 ## Technische keuzes
 
-| Onderdeel | Keuze | Reden |
-|-----------|-------|-------|
-| Auth | Supabase Auth | Zelfde als Cones, werkt gewoon |
-| Database | Supabase (Postgres) | 1 rij per user, JSON blob |
-| Modules | ES Modules (type="module") | Geen build stap nodig |
-| Supabase client | esm.sh CDN import | Geen npm/build nodig |
-| Styling | Vanilla CSS | Simpel, geen framework |
-| Offline | Service Worker | Cache HTML/CSS, skip Supabase API |
+| Onderdeel | Keuze |
+|-----------|-------|
+| Auth | Supabase Auth |
+| Database | Supabase (Postgres) |
+| Modules | ES Modules (type="module") |
+| Supabase client | esm.sh CDN import |
+| Styling | Vanilla CSS |
+| Offline | Service Worker |
 
 ## Progress sync strategie
 
