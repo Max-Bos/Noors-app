@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f0ece0">
+<title>Norsk</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f0ece0;
+  --bg2:       #e8e2d0;
+  --surface:   #faf7f0;
+  --surface2:  #f0ead8;
+  --border:    #d4c9a8;
+  --border2:   #b8aa82;
+  --accent:    #3d8c42;
+  --accent-d:  #2e6b32;
+  --accent-l:  #5aab60;
+  --warm:      #8b6914;
+  --warm-l:    #a67c1a;
+  --red:       #c0392b;
+  --red-l:     #e05545;
+  --yellow:    #7a6a00;
+  --text:      #1e2e1f;
+  --text2:     #4a6b4e;
+  --text3:     #7a9a7e;
+  --nav-h:     72px;
+  --safe-b:    env(safe-area-inset-bottom, 0px);
+  --radius:    18px;
+  --radius-sm: 12px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height:100%; background:var(--bg); color:var(--text); font-family:'Nunito',sans-serif; overflow:hidden; }
+
+/* organic leaf/dot pattern background */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    radial-gradient(ellipse 55% 35% at 15% 10%, rgba(61,140,66,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 55% at 85% 85%, rgba(61,140,66,0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 25% at 85% 15%, rgba(139,105,20,0.05) 0%, transparent 55%);
+  pointer-events:none; z-index:0;
+}
+/* subtle dot pattern */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image: radial-gradient(circle, rgba(61,140,66,0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events:none; z-index:0;
+  opacity:0.5;
+}
+
+/* ── APP SHELL ── */
+#app { display:flex; flex-direction:column; height:100dvh; max-width:480px; margin:0 auto; position:relative; z-index:1; }
+
+/* ── PAGES ── */
+.page { display:none; flex:1; overflow-y:auto; overflow-x:hidden; padding:0 0 calc(var(--nav-h) + var(--safe-b) + 8px); }
+.page.active { display:flex; flex-direction:column; }
+
+.page-head { padding:1.5rem 1.25rem 0.75rem; flex-shrink:0; }
+.page-title { font-size:1.65rem; font-weight:900; letter-spacing:-0.5px; line-height:1.1; color:var(--text); }
+.page-title span { color:var(--accent); }
+.page-sub { font-size:0.78rem; color:var(--text3); margin-top:0.25rem; font-weight:600; }
+
+.scroll-area { flex:1; overflow-y:auto; padding:0 1.25rem 1rem; }
+
+/* ── BOTTOM NAV ── */
+#nav {
+  position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:480px;
+  height:calc(var(--nav-h) + var(--safe-b));
+  background:rgba(240,236,224,0.92);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex; align-items:flex-start; padding-top:8px; z-index:100;
+}
+.nav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+  cursor:pointer; padding:6px 0; transition:all 0.18s;
+  border:none; background:none; color:var(--text3); font-family:'Nunito',sans-serif;
+}
+.nav-item .nav-icon { width:24px; height:24px; transition:transform 0.18s; }
+.nav-item .nav-icon svg { width:100%; height:100%; }
+.nav-item .nav-lbl { font-size:0.58rem; font-weight:700; letter-spacing:0.4px; text-transform:uppercase; }
+.nav-item.active { color:var(--accent); }
+.nav-item.active .nav-icon { transform:scale(1.12); }
+
+/* ── HOME PAGE ── */
+.home-hero {
+  margin:0 1.25rem 1.25rem;
+  background:linear-gradient(135deg, #dff0dc 0%, #c8e6c2 100%);
+  border:1px solid #b0d4a8;
+  border-radius:24px;
+  padding:1.4rem;
+  position:relative;
+  overflow:hidden;
+}
+.home-hero::before {
+  content:'';
+  position:absolute; top:-30px; right:-30px;
+  width:120px; height:120px;
+  background:radial-gradient(circle, rgba(61,140,66,0.12), transparent 70%);
+  border-radius:50%;
+}
+.hero-pct { font-size:3rem; font-weight:900; color:var(--accent); line-height:1; letter-spacing:-2px; }
+.hero-label { font-size:0.75rem; font-weight:700; color:var(--text2); margin-top:0.1rem; }
+.hero-bar-wrap { background:rgba(0,0,0,0.1); border-radius:99px; height:6px; margin-top:0.9rem; overflow:hidden; }
+.hero-bar { height:100%; border-radius:99px; background:linear-gradient(90deg, var(--accent-d), var(--accent-l)); transition:width 0.6s ease; }
+.hero-sub { font-size:0.72rem; color:var(--text3); margin-top:0.5rem; font-weight:600; }
+
+.stats-row { display:grid; grid-template-columns:repeat(2,1fr); gap:0.6rem; margin:0 1.25rem 1.25rem; }
+.stat-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:0.9rem 1rem;
+}
+.stat-val { font-size:1.5rem; font-weight:900; color:var(--accent); line-height:1; }
+.stat-lbl { font-size:0.62rem; color:var(--text3); margin-top:0.2rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+
+.section-label { font-size:0.62rem; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; margin:0 1.25rem 0.6rem; }
+
+.action-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:1rem 1.1rem;
+  display:flex; align-items:center; gap:0.9rem;
+  cursor:pointer; transition:all 0.15s;
+  margin:0 1.25rem 0.55rem;
+}
+.action-card:active { transform:scale(0.98); background:var(--surface2); }
+.ac-icon {
+  width:42px; height:42px; border-radius:13px;
+  background:rgba(61,140,66,0.1); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.ac-icon svg { width:20px; height:20px; }
+.ac-info { flex:1; }
+.ac-title { font-size:0.92rem; font-weight:800; color:var(--text); }
+.ac-desc { font-size:0.7rem; color:var(--text3); margin-top:0.1rem; font-weight:600; }
+.ac-arrow { color:var(--text3); flex-shrink:0; }
+.ac-arrow svg { width:16px; height:16px; }
+
+.streak-card {
+  margin:0 1.25rem 0.55rem;
+  background:linear-gradient(135deg, #f5e8c8, #eeddb0);
+  border:1px solid #d4b87a;
+  border-radius:var(--radius); padding:1rem 1.1rem;
+  display:flex; align-items:center; gap:0.9rem;
+}
+.sc-icon { width:42px; height:42px; border-radius:13px; background:rgba(139,105,20,0.12); border:1px solid #d4b87a; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sc-icon svg { width:20px; height:20px; }
+.sc-val { font-size:1.4rem; font-weight:900; color:var(--warm-l); line-height:1; }
+.sc-lbl { font-size:0.65rem; color:#9a7a40; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+
+/* ── BUTTONS ── */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;
+  padding:0.75rem 1.3rem; border-radius:var(--radius-sm);
+  border:none; font-family:'Nunito',sans-serif;
+  font-size:0.88rem; font-weight:800; cursor:pointer; transition:all 0.13s;
+}
+.btn:active { transform:scale(0.97); }
+.btn svg { width:16px; height:16px; flex-shrink:0; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:var(--accent-l); }
+.btn-ghost { background:var(--surface); border:1px solid var(--border); color:var(--text2); }
+.btn-ghost:hover { border-color:var(--border2); color:var(--text); }
+.btn-green { background:rgba(109,191,114,0.15); border:1px solid rgba(109,191,114,0.4); color:var(--accent-l); }
+.btn-red   { background:rgba(201,112, 96,0.15); border:1px solid rgba(201,112, 96,0.4); color:var(--red-l); }
+.btn-warm  { background:rgba(200,165, 90,0.15); border:1px solid rgba(200,165, 90,0.4); color:var(--warm-l); }
+.btn-full { width:100%; }
+.btn-lg { padding:1rem 1.5rem; font-size:0.95rem; border-radius:16px; }
+
+/* ── SETUP GROUPS ── */
+.setup-group { margin-bottom:1rem; }
+.setup-group label { font-size:0.65rem; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:1.2px; display:block; margin-bottom:0.5rem; }
+.option-row { display:flex; gap:0.45rem; flex-wrap:wrap; }
+.opt-btn {
+  flex:1; min-width:70px;
+  background:var(--surface); border:1.5px solid var(--border);
+  color:var(--text2); padding:0.55rem 0.6rem;
+  border-radius:var(--radius-sm); font-family:'Nunito',sans-serif;
+  font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.12s; text-align:center;
+}
+.opt-btn.active { background:rgba(109,191,114,0.12); border-color:var(--accent); color:var(--accent-l); }
+
+/* ── REFERENCE ── */
+.search-box {
+  position:sticky; top:0; z-index:10;
+  background:var(--bg); padding:0.75rem 1.25rem;
+}
+.search-input {
+  width:100%; background:var(--surface); border:1.5px solid var(--border);
+  color:var(--text); padding:0.65rem 0.9rem; border-radius:var(--radius-sm);
+  font-family:'Nunito',sans-serif; font-size:0.85rem; font-weight:600; outline:none;
+}
+.search-input:focus { border-color:var(--accent); }
+.search-input::placeholder { color:var(--text3); }
+
+.chip-row { display:flex; gap:0.4rem; padding:0 1.25rem 0.75rem; }
+.chip {
+  background:var(--surface); border:1.5px solid var(--border); color:var(--text3);
+  padding:0.3rem 0.85rem; border-radius:99px; font-size:0.72rem; font-weight:700; cursor:pointer; transition:all 0.1s;
+}
+.chip.active { background:rgba(109,191,114,0.12); border-color:var(--accent); color:var(--accent-l); }
+
+.cat-header { font-size:0.62rem; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; padding:1rem 1.25rem 0.5rem; }
+.word-list { padding:0 1.25rem; }
+.word-row { display:flex; align-items:center; gap:0.75rem; padding:0.55rem 0; border-bottom:1px solid var(--border); }
+.word-row:last-child { border-bottom:none; }
+.wr-n { font-size:0.58rem; color:var(--text3); min-width:20px; font-family:'JetBrains Mono'; }
+.wr-no { font-size:0.88rem; font-weight:700; color:var(--text); flex:1; }
+.wr-nl { font-size:0.8rem; color:var(--text2); font-weight:600; text-align:right; }
+.wr-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); opacity:0; flex-shrink:0; transition:opacity 0.2s; }
+.word-row.known .wr-dot { opacity:1; }
+.word-row.known .wr-no { color:var(--text2); }
+
+.phrase-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:0.8rem 1rem; margin:0 1.25rem 0.45rem;
+}
+.phrase-card.known { border-color:rgba(109,191,114,0.3); }
+.pc-no { font-size:0.85rem; font-weight:700; color:var(--text); margin-bottom:0.2rem; }
+.pc-nl { font-size:0.78rem; color:var(--text2); font-weight:600; }
+.pc-tag { font-size:0.58rem; color:var(--text3); margin-top:0.3rem; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; }
+
+/* ── FLASHCARD ── */
+.fc-setup-wrap { padding:0 1.25rem; flex:1; overflow-y:auto; }
+
+.fc-play { display:none; flex-direction:column; height:100%; }
+.fc-play.active { display:flex; }
+
+.fc-topbar { padding:0.75rem 1.25rem; flex-shrink:0; }
+.fc-prog-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; }
+.fc-prog-bar { flex:1; height:6px; background:var(--border); border-radius:99px; overflow:hidden; }
+.fc-prog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg, var(--accent-d), var(--accent-l)); transition:width 0.35s; }
+.fc-prog-txt { font-size:0.7rem; color:var(--text3); font-family:'JetBrains Mono'; font-weight:500; white-space:nowrap; }
+.fc-badges { display:flex; gap:0.45rem; }
+.fc-badge { font-size:0.65rem; font-weight:800; padding:0.22rem 0.65rem; border-radius:99px; }
+.fc-badge.remaining { background:rgba(61,140,66,0.12); color:var(--accent-d); }
+.fc-badge.retry { background:rgba(200,165,90,0.12); color:var(--warm-l); }
+.fc-badge.done { background:rgba(61,140,66,0.15); color:var(--accent-d); }
+
+.fc-card-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:0.75rem 1.25rem; perspective:1400px; }
+.fc-card {
+  width:100%; max-width:360px; height:215px;
+  position:relative; transform-style:preserve-3d;
+  transition:transform 0.5s cubic-bezier(0.34,1.15,0.64,1);
+  cursor:pointer; flex-shrink:0;
+}
+.fc-card.flipped { transform:rotateY(180deg); }
+.fc-face {
+  position:absolute; inset:0;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  border-radius:24px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:1.5rem; text-align:center;
+}
+.fc-front {
+  background:linear-gradient(145deg, #fdfaf3 0%, #f5f0e4 100%);
+  border:1px solid var(--border);
+  box-shadow:0 4px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.fc-back {
+  background:linear-gradient(145deg, #d8f0d8 0%, #c8e8c4 100%);
+  border:1px solid rgba(61,140,66,0.4);
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  transform:rotateY(180deg);
+}
+.fc-face-hint { font-size:0.6rem; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:2px; margin-bottom:0.9rem; }
+.fc-face-word { font-size:clamp(1.25rem,5vw,2rem); font-weight:900; color:var(--text); letter-spacing:-0.3px; line-height:1.2; }
+.fc-back .fc-face-word { color:var(--accent-d); }
+.fc-face-cat { font-size:0.62rem; color:var(--text3); margin-top:0.65rem; font-weight:700; }
+.fc-face-tap { font-size:0.65rem; color:var(--text3); margin-top:1.1rem; font-weight:600; }
+.fc-retry-tag { font-size:0.62rem; background:rgba(200,165,90,0.15); color:var(--warm-l); border-radius:99px; padding:0.2rem 0.65rem; font-weight:800; margin-top:0.75rem; border:1px solid rgba(200,165,90,0.3); display:none; }
+
+.fc-actions { padding:0 1.25rem 0.75rem; flex-shrink:0; }
+.fc-action-row { display:flex; gap:0.5rem; margin-bottom:0.5rem; }
+.fc-action-row .btn { flex:1; }
+
+/* ── QUIZ ── */
+.quiz-setup-wrap { padding:0 1.25rem; flex:1; overflow-y:auto; }
+.quiz-play { display:none; flex-direction:column; height:100%; }
+.quiz-play.active { display:flex; }
+
+.quiz-topbar { padding:0.75rem 1.25rem 0; flex-shrink:0; }
+.quiz-prog-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.4rem; }
+.quiz-prog-bar { flex:1; height:6px; background:var(--border); border-radius:99px; overflow:hidden; }
+.quiz-prog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg, var(--accent-d), var(--accent-l)); transition:width 0.3s; }
+.quiz-prog-txt { font-size:0.7rem; color:var(--text3); font-family:'JetBrains Mono'; white-space:nowrap; }
+.quiz-badges { display:flex; gap:0.45rem; margin-bottom:0.25rem; }
+.quiz-badge { font-size:0.65rem; font-weight:800; padding:0.22rem 0.65rem; border-radius:99px; }
+.quiz-badge.correct { background:rgba(61,140,66,0.12); color:var(--accent-d); }
+.quiz-badge.wrong { background:rgba(201,112,96,0.12); color:var(--red-l); }
+.quiz-badge.retry { background:rgba(200,165,90,0.12); color:var(--warm-l); }
+
+.quiz-body { flex:1; overflow-y:auto; padding:0.75rem 1.25rem 0.5rem; }
+.quiz-round-tag { display:inline-flex; align-items:center; gap:0.35rem; font-size:0.63rem; font-weight:800; padding:0.25rem 0.75rem; border-radius:99px; margin-bottom:0.8rem; }
+.quiz-round-tag.r1 { background:rgba(61,140,66,0.1); color:var(--accent-d); border:1px solid rgba(61,140,66,0.3); }
+.quiz-round-tag.r2 { background:rgba(200,165,90,0.12); color:var(--warm-l); border:1px solid rgba(200,165,90,0.3); }
+.quiz-round-tag svg { width:13px; height:13px; }
+
+.quiz-q-label { font-size:0.62rem; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.35rem; }
+.quiz-q-word { font-size:clamp(1.2rem,5vw,1.8rem); font-weight:900; color:var(--text); letter-spacing:-0.3px; margin-bottom:0.2rem; line-height:1.2; }
+.quiz-q-cat { font-size:0.62rem; color:var(--text3); margin-bottom:1.1rem; font-weight:700; }
+
+.choices { display:flex; flex-direction:column; gap:0.5rem; }
+.choice-btn {
+  width:100%; background:var(--surface); border:1.5px solid var(--border); color:var(--text);
+  padding:0.85rem 1rem; border-radius:var(--radius-sm);
+  font-family:'Nunito',sans-serif; font-size:0.88rem; font-weight:700; text-align:left;
+  cursor:pointer; transition:all 0.12s; display:flex; align-items:center; gap:0.75rem;
+}
+.choice-btn:hover:not(:disabled) { background:var(--surface2); border-color:var(--border2); }
+.choice-btn:active:not(:disabled) { transform:scale(0.99); }
+.choice-letter {
+  width:28px; height:28px; border-radius:8px;
+  background:var(--bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem; font-weight:800; color:var(--text3); flex-shrink:0;
+}
+.choice-btn.correct { background:rgba(61,140,66,0.1); border-color:var(--accent-d); color:var(--accent-d); }
+.choice-btn.correct .choice-letter { background:var(--accent); color:#fff; }
+.choice-btn.wrong { background:rgba(201,112,96,0.12); border-color:var(--red); color:var(--red-l); }
+.choice-btn.wrong .choice-letter { background:var(--red); color:#fff; }
+.choice-btn:disabled { cursor:default; }
+
+.quiz-feedback { margin-top:0.7rem; padding:0.75rem 1rem; border-radius:var(--radius-sm); font-size:0.82rem; font-weight:700; display:none; }
+.quiz-feedback.show { display:block; }
+.quiz-feedback.correct { background:rgba(61,140,66,0.08); border:1px solid rgba(61,140,66,0.3); color:var(--accent-d); }
+.quiz-feedback.wrong { background:rgba(201,112,96,0.1); border:1px solid rgba(201,112,96,0.3); color:var(--red-l); }
+
+.quiz-next { padding:0.75rem 1.25rem; flex-shrink:0; }
+
+/* ── RESULTS ── */
+.result-screen {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:2rem 1.5rem; text-align:center; flex:1;
+}
+.result-icon { width:72px; height:72px; border-radius:22px; background:rgba(61,140,66,0.1); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+.result-icon svg { width:36px; height:36px; }
+.result-title { font-size:1.7rem; font-weight:900; letter-spacing:-0.5px; margin-bottom:0.4rem; }
+.result-score { font-size:2.8rem; font-weight:900; color:var(--accent); line-height:1; margin:0.5rem 0; }
+.result-sub { font-size:0.8rem; color:var(--text2); margin-bottom:1.5rem; font-weight:600; }
+.result-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; width:100%; margin-bottom:1.5rem; }
+.result-stat { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.75rem 0.5rem; }
+.rs-val { font-size:1.3rem; font-weight:900; }
+.rs-lbl { font-size:0.58rem; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-top:0.15rem; font-weight:700; }
+.result-btns { display:flex; gap:0.6rem; width:100%; }
+.result-btns .btn { flex:1; }
+
+/* ── DIFFICULT ── */
+.diff-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; gap:0.75rem; text-align:center; padding:2rem; }
+.diff-empty .de-icon { width:64px; height:64px; border-radius:20px; background:rgba(61,140,66,0.1); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto; }
+.diff-empty .de-icon svg { width:32px; height:32px; }
+.diff-empty .de-title { font-size:1.1rem; font-weight:800; }
+.diff-empty .de-sub { font-size:0.75rem; color:var(--text3); font-weight:600; }
+
+.diff-item { display:flex; align-items:center; gap:0.75rem; padding:0.75rem 1.25rem; border-bottom:1px solid var(--border); }
+.di-bar { width:4px; height:36px; border-radius:2px; flex-shrink:0; }
+.di-no { font-size:0.9rem; font-weight:700; color:var(--text); flex:1; }
+.di-nl { font-size:0.78rem; color:var(--text2); font-weight:600; flex:1; }
+.di-count { font-size:0.7rem; font-weight:800; color:var(--red-l); font-family:'JetBrains Mono'; white-space:nowrap; }
+
+/* ── MISC ── */
+.hidden { display:none !important; }
+.mt1 { margin-top:0.6rem; }
+@keyframes slideUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.anim-in { animation:slideUp 0.22s ease forwards; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══ HOME ════════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <div class="page-head">
+    <div class="page-title">Norsk <span>leren</span></div>
+    <div class="page-sub" id="home-sub">Laad voortgang...</div>
+  </div>
+  <div class="scroll-area">
+    <div class="home-hero">
+      <div class="hero-pct" id="h-pct">0%</div>
+      <div class="hero-label">Voortgang</div>
+      <div class="hero-bar-wrap"><div class="hero-bar" id="h-pbar" style="width:0%"></div></div>
+      <div class="hero-sub" id="h-sub2">—</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="h-known">0</div><div class="stat-lbl">Geleerd</div></div>
+      <div class="stat-card"><div class="stat-val" id="h-total">0</div><div class="stat-lbl">Totaal</div></div>
+    </div>
+
+    <div class="section-label">Oefenen</div>
+    <div class="action-card" onclick="goPage('fc')">
+      <div class="ac-icon" style="background:rgba(109,191,114,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="10" rx="3"/><rect x="8" y="9" width="14" height="10" rx="3"/></svg></div>
+      <div class="ac-info"><div class="ac-title">Flashcards</div><div class="ac-desc">Foute kaartjes komen terug totdat je ze kent</div></div>
+      <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="action-card" onclick="goPage('quiz')">
+      <div class="ac-icon" style="background:rgba(109,191,114,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+      <div class="ac-info"><div class="ac-title">Quiz</div><div class="ac-desc">Meerkeuze — fout = retry ronde aan het einde</div></div>
+      <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="action-card" onclick="goPage('diff')">
+      <div class="ac-icon" style="background:rgba(201,112,96,0.1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg></div>
+      <div class="ac-info"><div class="ac-title">Moeilijke woorden</div><div class="ac-desc" id="h-diff-desc">—</div></div>
+      <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <div class="section-label" style="margin-top:1rem;">Woordenschat</div>
+    <div class="action-card" onclick="goPage('ref')">
+      <div class="ac-icon" style="background:rgba(109,191,114,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg></div>
+      <div class="ac-info"><div class="ac-title">Woordenboek</div><div class="ac-desc">Browse, zoek, bekijk voortgang</div></div>
+      <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <div id="streak-section" style="display:none">
+      <div class="section-label" style="margin-top:1rem;">Beste streak</div>
+      <div class="streak-card">
+        <div class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c8a55a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg></div>
+        <div><div class="sc-val" id="h-streak">0</div><div class="sc-lbl">Quiz streak record</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REFERENCE ════════════════════════════════ -->
+<div class="page" id="page-ref">
+  <div class="page-head">
+    <div class="page-title">Woorden<span>boek</span></div>
+    <div class="page-sub" id="ref-sub">— items</div>
+  </div>
+  <div class="search-box">
+    <input class="search-input" id="ref-search" placeholder="zoek Noors of Nederlands..." oninput="filterRef()">
+  </div>
+  <div class="chip-row" id="ref-chips">
+    <button class="chip active" onclick="setRefFilter('all',this)">Alles</button>
+    <button class="chip" onclick="setRefFilter('words',this)">Woorden</button>
+    <button class="chip" onclick="setRefFilter('phrases',this)">Zinnen</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;" id="ref-body"></div>
+</div>
+
+<!-- ══ FLASHCARDS ════════════════════════════════ -->
+<div class="page" id="page-fc">
+  <div class="page-head">
+    <div class="page-title">Flash<span>cards</span></div>
+    <div class="page-sub">Foute kaartjes herhalen tot je ze kent</div>
+  </div>
+  <!-- Setup -->
+  <div id="fc-setup-wrap" class="fc-setup-wrap">
+    <div class="setup-group">
+      <label>Wat wil je oefenen?</label>
+      <div class="option-row" id="fc-cat-opts">
+        <button class="opt-btn active" data-val="all">Alles</button>
+        <button class="opt-btn" data-val="words">Woorden</button>
+        <button class="opt-btn" data-val="phrases">Zinnen</button>
+        <button class="opt-btn" data-val="unknown">Onbekend</button>
+      </div>
+    </div>
+    <div class="setup-group">
+      <label>Richting</label>
+      <div class="option-row" id="fc-dir-opts">
+        <button class="opt-btn active" data-val="no-nl">Noors → NL</button>
+        <button class="opt-btn" data-val="nl-no">NL → Noors</button>
+        <button class="opt-btn" data-val="random">Willekeurig</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" style="margin-top:0.5rem;" onclick="startFC()">Start flashcards</button>
+  </div>
+  <!-- Play -->
+  <div class="fc-play" id="fc-play-wrap">
+    <div class="fc-topbar">
+      <div class="fc-prog-row">
+        <div class="fc-prog-bar"><div class="fc-prog-fill" id="fc-pbar" style="width:0%"></div></div>
+        <div class="fc-prog-txt" id="fc-ptxt">0/0</div>
+      </div>
+      <div class="fc-badges">
+        <span class="fc-badge remaining" id="fc-b-rem">0 over</span>
+        <span class="fc-badge retry" id="fc-b-retry">0 herhaling</span>
+        <span class="fc-badge done" id="fc-b-done">0 klaar</span>
+      </div>
+    </div>
+    <div class="fc-card-wrap">
+      <div class="fc-card" id="fc-card" onclick="flipFC()">
+        <div class="fc-face fc-front">
+          <div class="fc-face-hint" id="ff-hint">Noors</div>
+          <div class="fc-face-word" id="ff-word">—</div>
+          <div class="fc-face-cat" id="ff-cat"></div>
+          <div class="fc-face-tap">klik om te omdraaien</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-face-hint" id="fb-hint">Nederlands</div>
+          <div class="fc-face-word" id="fb-word">—</div>
+          <div class="fc-face-cat" id="fb-cat"></div>
+          <div class="fc-retry-tag" id="fb-retry">herhaling</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-actions">
+      <div class="fc-action-row">
+        <button class="btn btn-red" onclick="fcAnswer('bad')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Wist niet</button>
+        <button class="btn btn-ghost" onclick="flipFC()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg> Omdraaien</button>
+        <button class="btn btn-green" onclick="fcAnswer('good')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Kende ik!</button>
+      </div>
+      <button class="btn btn-ghost btn-full" onclick="stopFC()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Terug naar instellingen</button>
+    </div>
+  </div>
+  <!-- FC Done -->
+  <div class="result-screen" id="fc-result-wrap" style="display:none;">
+    <div class="result-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
+    <div class="result-title">Alle kaartjes!</div>
+    <div class="result-score" id="fc-res-score">0/0</div>
+    <div class="result-sub" id="fc-res-sub"></div>
+    <div class="result-btns mt1">
+      <button class="btn btn-primary" onclick="startFC()">Opnieuw</button>
+      <button class="btn btn-ghost" onclick="stopFC()">Instellingen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QUIZ ════════════════════════════════════ -->
+<div class="page" id="page-quiz">
+  <div class="page-head">
+    <div class="page-title"><span>Quiz</span> modus</div>
+    <div class="page-sub">Fout = retry ronde aan het einde</div>
+  </div>
+  <!-- Setup -->
+  <div id="quiz-setup-wrap" class="quiz-setup-wrap">
+    <div class="setup-group">
+      <label>Wat wil je oefenen?</label>
+      <div class="option-row" id="qz-cat-opts">
+        <button class="opt-btn active" data-val="all">Alles</button>
+        <button class="opt-btn" data-val="words">Woorden</button>
+        <button class="opt-btn" data-val="phrases">Zinnen</button>
+        <button class="opt-btn" data-val="unknown">Onbekend</button>
+      </div>
+    </div>
+    <div class="setup-group">
+      <label>Richting</label>
+      <div class="option-row" id="qz-dir-opts">
+        <button class="opt-btn active" data-val="no-nl">Noors → NL</button>
+        <button class="opt-btn" data-val="nl-no">NL → Noors</button>
+      </div>
+    </div>
+    <div class="setup-group">
+      <label>Aantal vragen</label>
+      <div class="option-row" id="qz-len-opts">
+        <button class="opt-btn active" data-val="10">10</button>
+        <button class="opt-btn" data-val="20">20</button>
+        <button class="opt-btn" data-val="30">30</button>
+        <button class="opt-btn" data-val="50">50</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" style="margin-top:0.5rem;" onclick="startQuiz()">Start quiz</button>
+  </div>
+  <!-- Play -->
+  <div class="quiz-play" id="quiz-play-wrap">
+    <div class="quiz-topbar">
+      <div class="quiz-prog-row">
+        <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="qz-pbar" style="width:0%"></div></div>
+        <div class="quiz-prog-txt" id="qz-ptxt">0/0</div>
+      </div>
+      <div class="quiz-badges">
+        <span class="quiz-badge correct" id="qz-b-ok">0 goed</span>
+        <span class="quiz-badge wrong" id="qz-b-wrong">0 fout</span>
+        <span class="quiz-badge retry" id="qz-b-retry">0 herhaling</span>
+      </div>
+    </div>
+    <div class="quiz-body" id="quiz-body"></div>
+    <div class="quiz-next" id="quiz-next-wrap" style="display:none;">
+      <button class="btn btn-primary btn-full" onclick="nextQuestion()">Volgende →</button>
+    </div>
+  </div>
+  <!-- Result -->
+  <div class="result-screen" id="quiz-result-wrap" style="display:none;">
+    <div class="result-icon" id="qr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
+    <div class="result-title" id="qr-title">Klaar!</div>
+    <div class="result-score" id="qr-score"></div>
+    <div class="result-sub" id="qr-sub"></div>
+    <div class="result-stats" id="qr-stats"></div>
+    <div class="result-btns">
+      <button class="btn btn-primary" onclick="startQuiz()">Opnieuw</button>
+      <button class="btn btn-ghost" onclick="stopQuiz()">Instellingen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIFFICULT ════════════════════════════════ -->
+<div class="page" id="page-diff">
+  <div class="page-head">
+    <div class="page-title">Moeilijke <span>woorden</span></div>
+    <div class="page-sub">Woorden die je het vaakst fout hebt</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;" id="diff-body"></div>
+</div>
+
+<!-- ══ BOTTOM NAV ════════════════════════════════ -->
+<nav id="nav">
+  <button class="nav-item active" onclick="goPage('home')" data-page="home">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="nav-lbl">Home</span>
+  </button>
+  <button class="nav-item" onclick="goPage('ref')" data-page="ref">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg></span><span class="nav-lbl">Woorden</span>
+  </button>
+  <button class="nav-item" onclick="goPage('fc')" data-page="fc">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="10" rx="3"/><rect x="8" y="9" width="14" height="10" rx="3"/></svg></span><span class="nav-lbl">Flashcard</span>
+  </button>
+  <button class="nav-item" onclick="goPage('quiz')" data-page="quiz">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><span class="nav-lbl">Quiz</span>
+  </button>
+  <button class="nav-item" onclick="goPage('diff')" data-page="diff">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg></span><span class="nav-lbl">Moeilijk</span>
+  </button>
+</nav>
+</div>
+
+<script>
+// ═══ SVG ICONS ═══════════════════════════════════════════
+function svgFC(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="10" rx="3"/><rect x="8" y="9" width="14" height="10" rx="3" fill="none"/></svg>`}
+function svgTarget(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="${c}"/></svg>`}
+function svgBook(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>`}
+function svgFlame(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg>`}
+function svgArrow(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`}
+function svgCheck(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`}
+function svgX(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`}
+function svgFlip(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`}
+function svgBack(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`}
+function svgLeaf(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`}
+function svgHome(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`}
+function svgRetry(c='currentColor'){return`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`}
+function navSVG(name){
+  const m={home:svgHome(),book:svgBook(),cards:svgFC(),target:svgTarget(),flame:svgFlame()};
+  return`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m[name].match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1]}</svg>`;
+}
+
+// ═══ DATA ════════════════════════════════════════════════
+const WORD_CATS = [
+  { id:'pronoun', label:'Voornaamwoorden', items:[
+    ['jeg','ik'],['du','jij'],['han','hij'],['hun','zij (enk)'],['vi','wij'],['dere','jullie'],
+    ['de','zij (mv)'],['det','het / dat'],['dette','dit'],['den','die / de'],['meg','mij'],
+    ['deg','jou'],['seg','zich'],['oss','ons'],['min','mijn'],['din','jouw'],
+    ['sin','zijn / haar (refl)'],['vår','onze'],['deres','hun'],['hvem','wie'],['hva','wat'],
+    ['hvilken','welke'],['ingen','niemand / geen'],['noen','iemand / sommige'],['alle','iedereen'],['hverandre','elkaar'],
+  ]},
+  { id:'verb', label:'Werkwoorden', items:[
+    ['være','zijn'],['ha','hebben'],['gjøre','doen'],['gå','gaan'],['komme','komen'],
+    ['si','zeggen'],['se','zien / kijken'],['vite','weten'],['ville','willen'],['skulle','zullen / moeten'],
+    ['kunne','kunnen'],['måtte','moeten'],['få','krijgen / mogen'],['ta','nemen'],['gi','geven'],
+    ['bli','worden / blijven'],['tenke','denken'],['tro','geloven / denken'],['snakke','praten'],
+    ['jobbe','werken'],['hjelpe','helpen'],['finne','vinden'],['forstå','begrijpen'],['lære','leren'],
+    ['betale','betalen'],['kjøpe','kopen'],['spise','eten'],['drikke','drinken'],['sove','slapen'],
+    ['bo','wonen'],['reise','reizen'],['kjøre','rijden'],['løpe','rennen'],['svømme','zwemmen'],
+    ['høre','horen'],['lese','lezen'],['skrive','schrijven'],['åpne','openen'],['lukke','sluiten'],
+    ['sende','sturen'],['ringe','bellen'],['bruke','gebruiken'],['prøve','proberen'],['vente','wachten'],
+    ['ønske','wensen'],['like','leuk vinden'],['elske','houden van'],['hate','haten'],['trenge','nodig hebben'],
+  ]},
+  { id:'adj', label:'Bijvoeglijke naamwoorden', items:[
+    ['god','goed'],['bra','prima / goed'],['dårlig','slecht'],['stor','groot'],['liten','klein'],
+    ['ny','nieuw'],['gammel','oud'],['ung','jong'],['vakker','mooi'],['stygg','lelijk'],
+    ['rask','snel'],['langsom','langzaam'],['varm','warm'],['kald','koud'],
+    ['full','vol'],['tom','leeg'],['lett','makkelijk / licht'],['tung','zwaar / moeilijk'],
+    ['riktig','juist / correct'],['feil','fout / verkeerd'],['viktig','belangrijk'],['morsom','grappig'],
+    ['kjedelig','saai'],['interessant','interessant'],['lykkelig','gelukkig'],['trist','verdrietig'],
+    ['sulten','hongerig'],['tørst','dorstig'],['trøtt','moe'],['frisk','gezond'],
+    ['syk','ziek'],['sterk','sterk'],['svak','zwak'],['voksen','volwassen'],
+  ]},
+  { id:'adv', label:'Bijwoorden & voegwoorden', items:[
+    ['her','hier'],['der','daar'],['nå','nu'],['da','toen / dan'],['alltid','altijd'],['aldri','nooit'],
+    ['ofte','vaak'],['noen ganger','soms'],['kanskje','misschien'],['selvfølgelig','natuurlijk'],
+    ['egentlig','eigenlijk'],['veldig','heel / erg'],['litt','een beetje'],['bare','alleen maar'],
+    ['også','ook'],['allerede','al'],['fortsatt','nog steeds'],['snart','binnenkort'],
+    ['tidlig','vroeg'],['sent','laat'],['og','en'],['eller','of'],['men','maar'],
+    ['fordi','omdat'],['hvis','als / indien'],['mens','terwijl'],['etter','na / nadat'],
+    ['før','voor / voordat'],['at','dat (voegw)'],['om','over / of'],['fra','van / uit'],
+    ['til','naar / tot'],['med','met'],['uten','zonder'],['på','op / aan'],['i','in'],['av','van'],
+  ]},
+  { id:'question', label:'Vragen & richting', items:[
+    ['hva','wat'],['hvem','wie'],['hvor','waar'],['når','wanneer'],['hvorfor','waarom'],
+    ['hvordan','hoe'],['hvor mye','hoeveel'],['til venstre','links'],['til høyre','rechts'],
+    ['rett frem','rechtdoor'],['opp','omhoog'],['ned','omlaag'],['inn','naar binnen'],
+    ['ut','naar buiten'],['nord','noorden'],['sør','zuiden'],['øst','oosten'],['vest','westen'],
+    ['nær','dichtbij'],['langt','ver weg'],
+  ]},
+  { id:'time', label:'Tijd & getallen', items:[
+    ['dag','dag'],['natt','nacht'],['morgen','ochtend / morgen'],['ettermiddag','middag'],
+    ['kveld','avond'],['uke','week'],['måned','maand'],['år','jaar'],
+    ['i dag','vandaag'],['i morgen','morgen'],['i går','gisteren'],
+    ['mandag','maandag'],['tirsdag','dinsdag'],['onsdag','woensdag'],
+    ['torsdag','donderdag'],['fredag','vrijdag'],['lørdag','zaterdag'],['søndag','zondag'],
+    ['januar','januari'],['februar','februari'],['mars','maart'],['april','april'],
+    ['mai','mei'],['juni','juni'],['juli','juli'],['august','augustus'],
+    ['september','september'],['oktober','oktober'],['november','november'],['desember','december'],
+    ['en','één'],['to','twee'],['tre','drie'],['fire','vier'],['fem','vijf'],
+    ['seks','zes'],['sju','zeven'],['åtte','acht'],['ni','negen'],['ti','tien'],
+    ['tjue','twintig'],['tretti','dertig'],['hundre','honderd'],['tusen','duizend'],
+  ]},
+  { id:'daily', label:'Dagelijks leven', items:[
+    ['mat','eten / voedsel'],['vann','water'],['hus','huis'],['leilighet','appartement'],
+    ['jobb','werk / baan'],['skole','school'],['by','stad'],['gate','straat'],
+    ['bil','auto'],['tog','trein'],['buss','bus'],['fly','vliegtuig'],
+    ['penger','geld'],['kort','kaart / betaalpas'],['butikk','winkel'],['marked','markt'],
+    ['restaurant','restaurant'],['kafé','café'],['sykehus','ziekenhuis'],['lege','dokter'],
+    ['apotek','apotheek'],['telefon','telefoon'],['datamaskin','computer'],['nett','internet'],
+    ['dør','deur'],['vindu','raam'],['kjøkken','keuken'],['bad','badkamer'],
+    ['seng','bed'],['sofa','bank / sofa'],['bord','tafel'],['stol','stoel'],
+    ['familie','familie'],['venn','vriend'],['kjæreste','vriend(in) / geliefde'],
+    ['barn','kind'],['navn','naam'],['adresse','adres'],['nøkkel','sleutel'],
+    ['tid','tijd'],['sted','plek'],['vei','weg'],['kart','kaart'],
+  ]},
+  { id:'nature', label:'Natuur & Noorwegen', items:[
+    ['nordlys','noorderlicht'],['midnattssol','middernachtzon'],['hytte','vakantiehuisje'],
+    ['kyst','kust'],['øy','eiland'],['dal','dal'],['innsjø','meer'],['foss','waterval'],
+    ['isbre','gletsjer'],['ulv','wolf'],['bjørn','beer'],['elg','eland'],['laks','zalm'],
+    ['ørn','adelaar'],['blomst','bloem'],['tre','boom'],['skog','bos'],['hav','zee / oceaan'],
+    ['elv','rivier'],['stein','steen'],['sand','zand'],['vær','weer'],['sol','zon'],
+    ['regn','regen'],['snø','sneeuw'],['vind','wind'],['tåke','mist'],['sky','wolk'],
+    ['fjord','fjord'],['fjell','berg'],['strand','strand'],
+  ]},
+];
+
+const PHRASE_CATS = [
+  { tag:'begroeting', items:[
+    ['Hei!','Hoi!'],['Hallo!','Hallo!'],['God morgen!','Goedemorgen!'],['God dag!','Goedemiddag!'],
+    ['God kveld!','Goedenavond!'],['God natt!','Goedenacht!'],['Ha det bra!','Tot ziens!'],
+    ['Vi ses!','We zien elkaar!'],['Vi ses snart!','Tot snel!'],
+    ['Hvordan har du det?','Hoe gaat het met je?'],['Det går bra, takk!','Het gaat goed, bedankt!'],
+    ['Bare bra!','Prima!'],['Ikke så bra.','Niet zo goed.'],['Hva med deg?','En jij?'],
+  ]},
+  { tag:'beleefdheid', items:[
+    ['Takk!','Bedankt!'],['Tusen takk!','Heel erg bedankt!'],['Ingen årsak!','Geen dank!'],
+    ['Vær så god!','Alsjeblieft / Graag gedaan!'],['Unnskyld meg!','Pardon / Excuseer!'],
+    ['Beklager!','Sorry!'],['Det er greit!','Het is oké!'],['Selvfølgelig!','Natuurlijk!'],
+    ['Jeg forstår.','Ik begrijp het.'],['Ikke noe problem.','Geen probleem.'],
+    ['Det var hyggelig!','Dat was gezellig!'],['Lykke til!','Veel succes!'],
+    ['Pass på deg selv!','Pas goed op jezelf!'],['God tur!','Goede reis!'],
+  ]},
+  { tag:'introductie', items:[
+    ['Hva heter du?','Hoe heet jij?'],['Jeg heter Max.','Ik heet Max.'],
+    ['Hyggelig å møte deg!','Leuk je te ontmoeten!'],['Hvor er du fra?','Waar kom jij vandaan?'],
+    ['Jeg er fra Nederland.','Ik kom uit Nederland.'],['Hvor gammel er du?','Hoe oud ben jij?'],
+    ['Jeg er atten år.','Ik ben achttien jaar.'],['Hva jobber du med?','Wat doe jij voor werk?'],
+    ['Jeg er utvikler.','Ik ben developer.'],['Jeg bor i Rotterdam.','Ik woon in Rotterdam.'],
+    ['Jeg lærer norsk.','Ik leer Noors.'],['Jeg planlegger å flytte til Norge.','Ik plan naar Noorwegen te verhuizen.'],
+    ['Jeg snakker litt norsk.','Ik spreek een beetje Noors.'],['Norsk er et vakkert språk.','Noors is een mooie taal.'],
+  ]},
+  { tag:'vragen', items:[
+    ['Kan du hjelpe meg?','Kun je me helpen?'],['Vet du hvor ... er?','Weet jij waar ... is?'],
+    ['Hva koster det?','Wat kost het?'],['Kan du gjenta det?','Kun je dat herhalen?'],
+    ['Hva betyr det?','Wat betekent dat?'],['Kan du snakke saktere?','Kun je langzamer praten?'],
+    ['Jeg forstår ikke.','Ik begrijp het niet.'],['Jeg snakker ikke norsk så godt.','Ik spreek niet zo goed Noors.'],
+    ['Snakker du engelsk?','Spreek jij Engels?'],['Hvordan sier man ... på norsk?','Hoe zeg je ... in het Noors?'],
+    ['Kan du skrive det ned?','Kun je het opschrijven?'],['Hva sa du?','Wat zei je?'],
+    ['Hva mener du?','Wat bedoel je?'],['Kan du hjelpe meg å forstå?','Kun je me helpen het te begrijpen?'],
+  ]},
+  { tag:'praktisch', items:[
+    ['Hvor er toalettet?','Waar is het toilet?'],['Kan jeg få regningen?','Kan ik de rekening?'],
+    ['Jeg vil gjerne bestille...','Ik wil graag bestellen...'],['Har dere et bord ledig?','Hebben jullie een tafel vrij?'],
+    ['Kan jeg betale med kort?','Kan ik met pas betalen?'],['Hvor er nærmeste apotek?','Waar is de dichtstbijzijnde apotheek?'],
+    ['Ring etter ambulanse!','Bel een ambulance!'],['Jeg trenger hjelp!','Ik heb hulp nodig!'],
+    ['Kan du ringe politiet?','Kun je de politie bellen?'],['Jeg har mistet lommeboken min.','Ik ben mijn portemonnee kwijtgeraakt.'],
+    ['Jeg er syk.','Ik ben ziek.'],['Jeg har vondt i magen.','Ik heb buikpijn.'],
+    ['Er det en lege i nærheten?','Is er een dokter in de buurt?'],['Jeg er allergisk mot...','Ik ben allergisch voor...'],
+  ]},
+  { tag:'transport', items:[
+    ['Hvor går bussen til...?','Welke bus gaat naar...?'],['Når kommer toget?','Wanneer komt de trein?'],
+    ['En billett til Bergen, takk.','Eén kaartje naar Bergen, graag.'],['Er det langt herfra?','Is het ver hiervandaan?'],
+    ['Kan du kjøre meg til...?','Kun je me naar... rijden?'],['Hvor kan jeg parkere?','Waar kan ik parkeren?'],
+    ['Ta til venstre / høyre.','Ga links / rechts.'],['Gå rett frem.','Ga rechtdoor.'],
+    ['Stopp her, takk.','Stop hier, graag.'],['Hvor lenge tar det?','Hoe lang duurt het?'],
+    ['Hva er prisen?','Wat is de prijs?'],['Går det buss dit?','Gaat er een bus daarheen?'],
+    ['Kan jeg kjøpe billett her?','Kan ik hier een kaartje kopen?'],['Neste stopp, vær så god.','Volgende halte graag.'],
+  ]},
+  { tag:'wonen & werk', items:[
+    ['Jeg leter etter en leilighet.','Ik zoek een appartement.'],['Hva er husleien?','Wat is de huur?'],
+    ['Er strøm inkludert?','Is stroom inbegrepen?'],['Jeg jobber hjemmefra.','Ik werk vanuit huis.'],
+    ['Kontoret er i sentrum.','Het kantoor is in het centrum.'],['Jeg har en avtale klokken ni.','Ik heb een afspraak om negen uur.'],
+    ['Kan vi møtes i morgen?','Kunnen we morgen afspreken?'],['Jeg sender deg en e-post.','Ik stuur je een e-mail.'],
+    ['Prosjektet er ferdig.','Het project is klaar.'],['Vi trenger mer tid.','We hebben meer tijd nodig.'],
+    ['Jeg jobber som utvikler.','Ik werk als developer.'],['Vi har et møte i dag.','We hebben vandaag een vergadering.'],
+    ['Kan du sende meg filen?','Kun je me het bestand sturen?'],['Hva er adressen?','Wat is het adres?'],
+  ]},
+  { tag:'natuur', items:[
+    ['Hvordan er været i dag?','Hoe is het weer vandaag?'],['Det regner.','Het regent.'],
+    ['Det er sol i dag.','Het is zonnig vandaag.'],['Det er veldig kaldt!','Het is heel koud!'],
+    ['Snør det mye her?','Sneeuwt het veel hier?'],['Fjorden er vakker.','De fjord is mooi.'],
+    ['Jeg elsker naturen her.','Ik hou van de natuur hier.'],['Kan vi gå på tur?','Kunnen we gaan wandelen?'],
+    ['Hvor høy er dette fjellet?','Hoe hoog is deze berg?'],['Nordlyset er fantastisk!','Het noorderlicht is fantastisch!'],
+    ['Ser du noe dyreliv?','Zie je dieren in het wild?'],['Vannet er iskaldt.','Het water is ijskoud.'],
+    ['Utsikten er utrolig!','Het uitzicht is ongelooflijk!'],['Jeg vil bo nær naturen.','Ik wil dicht bij de natuur wonen.'],
+  ]},
+  { tag:'sociaal', items:[
+    ['Det er interessant!','Dat is interessant!'],['Jeg er enig.','Ik ben het ermee eens.'],
+    ['Jeg er uenig.','Ik ben het er niet mee eens.'],['Hva synes du?','Wat vind jij?'],
+    ['Jeg vet ikke.','Ik weet het niet.'],['Det er opp til deg.','Het is aan jou.'],
+    ['Hva liker du å gjøre?','Wat doe jij graag?'],['Har du planer i helgen?','Heb jij plannen in het weekend?'],
+    ['La oss finne ut av det!','Laten we het uitzoeken!'],['Skal vi ta en kaffe?','Zullen we koffie drinken?'],
+    ['Jeg koser meg!','Ik geniet ervan!'],['Det var morsomt!','Dat was leuk!'],
+    ['Vi har det bra her.','We hebben het goed hier.'],['Kan vi henge ut en dag?','Kunnen we een dag afspreken?'],
+  ]},
+  { tag:'gevoel', items:[
+    ['Jeg er glad!','Ik ben blij!'],['Jeg er trøtt.','Ik ben moe.'],
+    ['Jeg er sulten.','Ik ben hongerig.'],['Jeg er tørst.','Ik heb dorst.'],
+    ['Jeg er nervøs.','Ik ben nerveus.'],['Jeg savner deg.','Ik mis je.'],
+    ['Jeg liker deg.','Ik mag je.'],['Det gjør vondt.','Het doet pijn.'],
+    ['Jeg er ikke i form.','Ik voel me niet goed.'],['Alt er bra med meg.','Alles is goed met mij.'],
+    ['Jeg er stolt!','Ik ben trots!'],['Jeg er spent!','Ik ben opgewonden / zenuwachtig!'],
+    ['Det gleder meg!','Dat verheugt me!'],['Jeg er frustrert.','Ik ben gefrustreerd.'],
+  ]},
+];
+
+function buildAll(){const o=[];WORD_CATS.forEach(c=>c.items.forEach(([no,nl])=>o.push({type:'word',cat:c.id,catLabel:c.label,no,nl})));PHRASE_CATS.forEach(c=>c.items.forEach(([no,nl])=>o.push({type:'phrase',cat:c.tag,catLabel:c.tag,no,nl})));return o;}
+const ALL=buildAll();
+
+// ═══ STORAGE ═════════════════════════════════════════════
+const itemKey=i=>i.type+'|'+i.no;
+const getProgress=()=>{try{return JSON.parse(localStorage.getItem('norsk_p')||'{}')}catch{return{}}};
+const saveProgress=p=>localStorage.setItem('norsk_p',JSON.stringify(p));
+const getDifficult=()=>{try{return JSON.parse(localStorage.getItem('norsk_d')||'{}')}catch{return{}}};
+const saveDifficult=d=>localStorage.setItem('norsk_d',JSON.stringify(d));
+const getStreak=()=>parseInt(localStorage.getItem('norsk_s')||'0');
+const saveStreak=s=>localStorage.setItem('norsk_s',String(s));
+
+function markKnown(key){const p=getProgress();p[key]=true;saveProgress(p);const d=getDifficult();delete d[key];saveDifficult(d);}
+function markUnknown(key){const p=getProgress();delete p[key];saveProgress(p);const d=getDifficult();d[key]=(d[key]||0)+1;saveDifficult(d);}
+
+function updateHomeStats(){
+  const p=getProgress();
+  const known=ALL.filter(i=>p[itemKey(i)]).length;
+  const total=ALL.length;
+  const pct=Math.round(known/total*100);
+  document.getElementById('h-known').textContent=known;
+  document.getElementById('h-total').textContent=total;
+  document.getElementById('h-pct').textContent=pct+'%';
+  document.getElementById('h-pbar').style.width=pct+'%';
+  document.getElementById('home-sub').textContent=`${known} van ${total} woorden & zinnen geleerd`;
+  document.getElementById('h-sub2').textContent=`${total-known} items nog te leren`;
+  const d=getDifficult();
+  const dc=Object.keys(d).length;
+  document.getElementById('h-diff-desc').textContent=dc?`${dc} woorden die je moeite kosten`:'Nog geen moeilijke woorden';
+  const streak=getStreak();
+  document.getElementById('streak-section').style.display=streak>0?'':'none';
+  if(streak>0)document.getElementById('h-streak').textContent=streak;
+}
+
+// ═══ NAV ═════════════════════════════════════════════════
+function goPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelector(`.nav-item[data-page="${id}"]`).classList.add('active');
+  if(id==='home')updateHomeStats();
+  if(id==='diff')renderDifficult();
+  if(id==='ref')renderReference();
+}
+
+// ═══ OPTION GROUPS ═══════════════════════════════════════
+['fc-cat-opts','fc-dir-opts','qz-cat-opts','qz-dir-opts','qz-len-opts'].forEach(gid=>{
+  document.getElementById(gid).querySelectorAll('.opt-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.getElementById(gid).querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+const getOpt=gid=>document.getElementById(gid).querySelector('.opt-btn.active').dataset.val;
+
+// ═══ REFERENCE ═══════════════════════════════════════════
+let refFilter='all';
+function setRefFilter(f,btn){refFilter=f;document.getElementById('ref-chips').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderReference();}
+
+function renderReference(){
+  const body=document.getElementById('ref-body');
+  const p=getProgress();
+  body.innerHTML='';
+  let wn=1;
+  if(refFilter!=='phrases'){
+    WORD_CATS.forEach(cat=>{
+      const hdr=document.createElement('div');hdr.className='cat-header';hdr.textContent=cat.label;body.appendChild(hdr);
+      const list=document.createElement('div');list.className='word-list';
+      cat.items.forEach(([no,nl])=>{
+        const key='word|'+no;
+        const row=document.createElement('div');
+        row.className='word-row'+(p[key]?' known':'');
+        row.dataset.no=no.toLowerCase();row.dataset.nl=nl.toLowerCase();
+        row.innerHTML=`<span class="wr-n">${wn++}</span><span class="wr-no">${no}</span><span class="wr-nl">${nl}</span><span class="wr-dot"></span>`;
+        list.appendChild(row);
+      });
+      body.appendChild(list);
+    });
+  }
+  if(refFilter!=='words'){
+    const ph=document.createElement('div');ph.className='cat-header';ph.textContent='Zinnen';body.appendChild(ph);
+    PHRASE_CATS.forEach(cat=>{
+      const ch=document.createElement('div');ch.className='cat-header';ch.style.paddingTop='0.2rem';ch.textContent='— '+cat.tag;body.appendChild(ch);
+      cat.items.forEach(([no,nl])=>{
+        const key='phrase|'+no;
+        const card=document.createElement('div');
+        card.className='phrase-card'+(p[key]?' known':'');
+        card.dataset.no=no.toLowerCase();card.dataset.nl=nl.toLowerCase();
+        card.innerHTML=`<div class="pc-no">${no}</div><div class="pc-nl">${nl}</div><div class="pc-tag">${cat.tag}</div>`;
+        body.appendChild(card);
+      });
+    });
+  }
+  document.getElementById('ref-sub').textContent=`${ALL.length} items`;
+  filterRef();
+}
+
+function filterRef(){
+  const q=(document.getElementById('ref-search').value||'').toLowerCase().trim();
+  if(!q)return;
+  document.getElementById('ref-body').querySelectorAll('[data-no]').forEach(el=>{
+    el.style.display=(el.dataset.no.includes(q)||el.dataset.nl.includes(q))?'':'none';
+  });
+}
+
+// ═══ FLASHCARD ═══════════════════════════════════════════
+let fcDeck=[],fcRetry=[],fcDone=0,fcFlipped=false,fcIsRetry=false;
+
+function getPool(cat){const p=getProgress();let items=[...ALL];if(cat==='words')items=items.filter(i=>i.type==='word');else if(cat==='phrases')items=items.filter(i=>i.type==='phrase');else if(cat==='unknown')items=items.filter(i=>!p[itemKey(i)]);return items;}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+
+function startFC(){
+  const cat=getOpt('fc-cat-opts');
+  const pool=getPool(cat);
+  if(!pool.length){alert('Geen items. Kies een andere categorie.');return;}
+  fcDeck=shuffle([...pool]);fcRetry=[];fcDone=0;fcIsRetry=false;
+  document.getElementById('fc-setup-wrap').style.display='none';
+  document.getElementById('fc-result-wrap').style.display='none';
+  document.getElementById('fc-play-wrap').classList.add('active');
+  showFCCard();
+}
+function stopFC(){
+  document.getElementById('fc-play-wrap').classList.remove('active');
+  document.getElementById('fc-result-wrap').style.display='none';
+  document.getElementById('fc-setup-wrap').style.display='';
+}
+function showFCCard(){
+  if(fcDeck.length===0&&fcRetry.length>0){fcDeck=shuffle([...fcRetry]);fcRetry=[];fcIsRetry=true;}
+  if(fcDeck.length===0){showFCDone();return;}
+  const item=fcDeck[0];
+  const dir=getOpt('fc-dir-opts');
+  const useDir=dir==='random'?(Math.random()>.5?'no-nl':'nl-no'):dir;
+  const front=useDir==='no-nl'?item.no:item.nl;
+  const back=useDir==='no-nl'?item.nl:item.no;
+  fcFlipped=false;
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('ff-hint').textContent=useDir==='no-nl'?'Noors':'Nederlands';
+  document.getElementById('ff-word').textContent=front;
+  document.getElementById('ff-cat').textContent=item.catLabel;
+  document.getElementById('fb-hint').textContent=useDir==='no-nl'?'Nederlands':'Noors';
+  document.getElementById('fb-word').textContent=back;
+  document.getElementById('fb-cat').textContent=item.catLabel;
+  document.getElementById('fb-retry').style.display=fcIsRetry?'':'none';
+  const total=fcDone+fcDeck.length+fcRetry.length;
+  const pct=total?Math.round(fcDone/total*100):0;
+  document.getElementById('fc-pbar').style.width=pct+'%';
+  document.getElementById('fc-ptxt').textContent=`${fcDone}/${total}`;
+  document.getElementById('fc-b-rem').textContent=`${fcDeck.length} over`;
+  document.getElementById('fc-b-retry').textContent=`${fcRetry.length} herhaling`;
+  document.getElementById('fc-b-done').textContent=`${fcDone} klaar`;
+}
+function flipFC(){fcFlipped=!fcFlipped;document.getElementById('fc-card').classList.toggle('flipped',fcFlipped);}
+function fcAnswer(result){
+  const item=fcDeck.shift();
+  if(result==='good'){markKnown(itemKey(item));fcDone++;}
+  else{markUnknown(itemKey(item));fcRetry.push(item);}
+  updateHomeStats();
+  setTimeout(showFCCard,150);
+}
+function showFCDone(){
+  document.getElementById('fc-play-wrap').classList.remove('active');
+  document.getElementById('fc-result-wrap').style.display='flex';
+  const p=getProgress();
+  const pool=getPool(getOpt('fc-cat-opts'));
+  const kn=pool.filter(i=>p[itemKey(i)]).length;
+  document.getElementById('fc-res-score').textContent=`${kn}/${pool.length}`;
+  document.getElementById('fc-res-sub').textContent=`${fcDone} kaartjes doorlopen — ${kn} als gekend gemarkeerd`;
+}
+
+// ═══ QUIZ ════════════════════════════════════════════════
+let qzItems=[],qzRetry=[],qzIdx=0,qzCorrect=0,qzWrong=0,qzDir='no-nl',qzAnswered=false,qzRound=1,currentStreak=0;
+
+function startQuiz(){
+  const cat=getOpt('qz-cat-opts');
+  qzDir=getOpt('qz-dir-opts');
+  const len=parseInt(getOpt('qz-len-opts'));
+  const pool=getPool(cat);
+  if(pool.length<4){alert('Niet genoeg items (min 4). Kies een andere categorie.');return;}
+  qzItems=shuffle([...pool]).slice(0,len);
+  qzRetry=[];qzIdx=0;qzCorrect=0;qzWrong=0;qzAnswered=false;qzRound=1;currentStreak=0;
+  document.getElementById('quiz-setup-wrap').style.display='none';
+  document.getElementById('quiz-result-wrap').style.display='none';
+  document.getElementById('quiz-play-wrap').classList.add('active');
+  showQQuestion();
+}
+function stopQuiz(){
+  document.getElementById('quiz-play-wrap').classList.remove('active');
+  document.getElementById('quiz-result-wrap').style.display='none';
+  document.getElementById('quiz-setup-wrap').style.display='';
+}
+function showQQuestion(){
+  if(qzIdx>=qzItems.length){
+    if(qzRetry.length>0){qzItems=[...qzRetry];qzRetry=[];qzIdx=0;qzRound++;showQQuestion();}
+    else{showQuizResult();}
+    return;
+  }
+  const item=qzItems[qzIdx];
+  const question=qzDir==='no-nl'?item.no:item.nl;
+  const correct=qzDir==='no-nl'?item.nl:item.no;
+  const qLabel=qzDir==='no-nl'?'Wat betekent dit in het Nederlands?':'Hoe zeg je dit in het Noors?';
+  const pool=ALL.filter(i=>{const a=qzDir==='no-nl'?i.nl:i.no;return a!==correct&&i.type===item.type;});
+  const choices=shuffle([correct,...shuffle([...pool]).slice(0,3).map(i=>qzDir==='no-nl'?i.nl:i.no)]);
+  const letters=['A','B','C','D'];
+  qzAnswered=false;
+  const pct=Math.round(qzIdx/qzItems.length*100);
+  document.getElementById('qz-pbar').style.width=pct+'%';
+  document.getElementById('qz-ptxt').textContent=`${qzIdx+1}/${qzItems.length}`;
+  document.getElementById('qz-b-ok').textContent=`${qzCorrect} goed`;
+  document.getElementById('qz-b-wrong').textContent=`${qzWrong} fout`;
+  document.getElementById('qz-b-retry').textContent=`${qzRetry.length} herhaling`;
+  document.getElementById('quiz-next-wrap').style.display='none';
+  document.getElementById('quiz-body').innerHTML=`
+    ${qzRound>1
+      ?`<div class="quiz-round-tag r2">${svgRetry()} Herhaling ronde ${qzRound}</div>`
+      :`<div class="quiz-round-tag r1">Ronde ${qzRound}</div>`}
+    <div class="quiz-q-label">${qLabel}</div>
+    <div class="quiz-q-word">${question}</div>
+    <div class="quiz-q-cat">${item.catLabel}</div>
+    <div class="choices">
+      ${choices.map((c,i)=>`<button class="choice-btn" onclick="checkAnswer(this,'${c.replace(/'/g,"\\'").replace(/"/g,'&quot;')}','${correct.replace(/'/g,"\\'").replace(/"/g,'&quot;')}','${itemKey(item).replace(/'/g,"\\'")}')" data-val="${c.replace(/"/g,'&quot;')}"><span class="choice-letter">${letters[i]}</span>${c}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="qfb"></div>
+  `;
+}
+function checkAnswer(btn,chosen,correct,key){
+  if(qzAnswered)return;qzAnswered=true;
+  document.querySelectorAll('.choice-btn').forEach(b=>{b.disabled=true;if(b.dataset.val===correct)b.classList.add('correct');});
+  const fb=document.getElementById('qfb');
+  if(chosen===correct){
+    btn.classList.add('correct');qzCorrect++;currentStreak++;markKnown(key);
+    fb.className='quiz-feedback show correct';fb.textContent='Goed zo!';
+    if(currentStreak>getStreak())saveStreak(currentStreak);
+  } else {
+    btn.classList.add('wrong');qzWrong++;currentStreak=0;markUnknown(key);
+    qzRetry.push(qzItems[qzIdx]);
+    fb.className='quiz-feedback show wrong';fb.innerHTML=`Fout! Juiste antwoord: <strong>${correct}</strong> — komt terug als herhaling`;
+  }
+  document.getElementById('qz-b-ok').textContent=`${qzCorrect} goed`;
+  document.getElementById('qz-b-wrong').textContent=`${qzWrong} fout`;
+  document.getElementById('qz-b-retry').textContent=`${qzRetry.length} herhaling`;
+  document.getElementById('quiz-next-wrap').style.display='';
+  updateHomeStats();
+}
+function nextQuestion(){qzIdx++;showQQuestion();}
+function showQuizResult(){
+  document.getElementById('quiz-play-wrap').classList.remove('active');
+  document.getElementById('quiz-result-wrap').style.display='flex';
+  const total=qzCorrect+qzWrong;
+  const pct=total?Math.round(qzCorrect/total*100):0;
+  const title=pct>=90?'Uitstekend!':pct>=70?'Goed gedaan!':pct>=50?'Aardig bezig!':'Blijf oefenen!';
+  document.getElementById('qr-title').textContent=title;
+  document.getElementById('qr-score').textContent=`${qzCorrect}/${total}`;
+  document.getElementById('qr-sub').textContent=`${pct}% correct — ${qzRound} ronde${qzRound>1?'n':''} gespeeld`;
+  document.getElementById('qr-stats').innerHTML=`
+    <div class="result-stat"><div class="rs-val" style="color:var(--accent-l)">${qzCorrect}</div><div class="rs-lbl">Correct</div></div>
+    <div class="result-stat"><div class="rs-val" style="color:var(--red-l)">${qzWrong}</div><div class="rs-lbl">Fout</div></div>
+    <div class="result-stat"><div class="rs-val" style="color:var(--warm-l)">${qzRound}</div><div class="rs-lbl">Rondes</div></div>
+  `;
+}
+
+// ═══ DIFFICULT ═══════════════════════════════════════════
+function renderDifficult(){
+  const d=getDifficult();
+  const body=document.getElementById('diff-body');
+  const entries=Object.entries(d).sort((a,b)=>b[1]-a[1]);
+  if(!entries.length){
+    body.innerHTML=`<div class="diff-empty"><div class="de-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div><div class="de-title">Geen moeilijke woorden!</div><div class="de-sub">Doe flashcards of een quiz — foute woorden verschijnen hier automatisch.</div></div>`;
+    return;
+  }
+  const colors=['#c97060','#c98a60','#b8a840','#74a874','#6dbf72'];
+  body.innerHTML='';
+  entries.forEach(([key,count])=>{
+    const item=ALL.find(i=>itemKey(i)===key);if(!item)return;
+    const lvl=Math.min(count-1,4);
+    const div=document.createElement('div');div.className='diff-item';
+    div.innerHTML=`<div class="di-bar" style="background:${colors[lvl]}"></div><div class="di-no">${item.no}</div><div class="di-nl">${item.nl}</div><div class="di-count">${count}×</div>`;
+    body.appendChild(div);
+  });
+}
+
+// ═══ INIT ════════════════════════════════════════════════
+document.getElementById('ref-search').addEventListener('input',filterRef);
+renderReference();
+updateHomeStats();
+</script>
+</body>
+</html>
