@@ -3,6 +3,7 @@ import { initProgress, getStats, getDifficult, getStreak } from './progress.js'
 import { ALL_ITEMS, itemKey }               from './data.js'
 import { startFlashcards, flipCard, answer } from './flashcard.js'
 import { startQuiz, checkAnswer, nextQuestion } from './quiz.js'
+import { startTyping, submitAnswer, nextCard } from './typingmode.js'
 import { renderReference, renderDifficult } from './reference.js'
 
 // ── Init ─────────────────────────────────────────────────
@@ -37,6 +38,7 @@ function renderPage(page) {
     case 'fc':    setupFC();    break
     case 'quiz':  setupQuiz();  break
     case 'diff':  renderDiff(); break
+    case 'type':  setupType();  break
   }
 }
 
@@ -282,6 +284,131 @@ function showQuizPlay() {
 function showQuizResult() {
   document.getElementById('quiz-play-wrap').classList.remove('active')
   document.getElementById('quiz-result-wrap').style.display = 'flex'
+}
+
+// ── Typemode ─────────────────────────────────────────────
+
+function setupType() {
+  showTypeSetup()
+
+  document.getElementById('type-start-btn').onclick = () => {
+    const cat = getOptVal('type-cat-opts')
+    const dir = getOptVal('type-dir-opts')
+
+    const ok = startTyping({
+      cat, dir,
+      onCard: data => renderTypeCard(data),
+      onDone: data => renderTypeDone(data),
+    })
+    if (!ok) return alert('Geen items. Kies een andere categorie.')
+    showTypePlay()
+  }
+
+  const input  = document.getElementById('type-input')
+  const submit = document.getElementById('type-submit')
+
+  const doSubmit = () => {
+    if (submit.disabled) return
+    const result = submitAnswer(
+      input.value,
+      data => { renderTypeCard(data); resetTypeInput() },
+      data => renderTypeDone(data)
+    )
+    if (!result) return
+    renderTypeFeedback(result)
+  }
+
+  submit.onclick = doSubmit
+  input.onkeydown = e => { if (e.key === 'Enter') doSubmit() }
+
+  document.getElementById('type-next-btn').onclick = () => {
+    nextCard(
+      data => { renderTypeCard(data); resetTypeInput() },
+      data => renderTypeDone(data)
+    )
+  }
+
+  document.getElementById('type-stop-btn').onclick  = showTypeSetup
+  document.getElementById('type-retry-btn').onclick = () => document.getElementById('type-start-btn').click()
+  document.getElementById('type-back-btn').onclick  = showTypeSetup
+}
+
+function renderTypeCard({ word, hint, cat, isRetry, remaining, retryCount, done, total }) {
+  document.getElementById('type-hint').textContent  = hint
+  document.getElementById('type-word').textContent  = word
+  document.getElementById('type-cat').textContent   = cat
+  document.getElementById('type-retry-tag').style.display = isRetry ? '' : 'none'
+
+  const pct = total ? Math.round(done / total * 100) : 0
+  document.getElementById('type-pbar').style.width    = pct + '%'
+  document.getElementById('type-ptxt').textContent    = `${done}/${total}`
+  document.getElementById('type-b-rem').textContent   = `${remaining} over`
+  document.getElementById('type-b-retry').textContent = `${retryCount} herhaling`
+  document.getElementById('type-b-done').textContent  = `${done} klaar`
+}
+
+function renderTypeFeedback(result) {
+  const fb      = document.getElementById('type-feedback')
+  const nextBtn = document.getElementById('type-next-btn')
+  const input   = document.getElementById('type-input')
+  const submit  = document.getElementById('type-submit')
+
+  input.disabled  = true
+  submit.disabled = true
+
+  if (result.isCorrect) {
+    fb.className = 'type-feedback show correct'
+    fb.textContent = 'Goed! ✓'
+    input.classList.add('correct')
+    nextBtn.style.display = 'none'
+  } else if (result.isAlmost) {
+    fb.className = 'type-feedback show almost'
+    fb.textContent = `Bijna! Het was: ${result.correctAnswer}`
+    input.classList.add('almost')
+    nextBtn.style.display = ''
+  } else {
+    fb.className = 'type-feedback show wrong'
+    fb.textContent = `Fout! Het was: ${result.correctAnswer}`
+    input.classList.add('wrong')
+    nextBtn.style.display = ''
+  }
+}
+
+function resetTypeInput() {
+  const input  = document.getElementById('type-input')
+  const submit = document.getElementById('type-submit')
+  const fb     = document.getElementById('type-feedback')
+  const nextBtn = document.getElementById('type-next-btn')
+
+  input.value    = ''
+  input.disabled = false
+  input.className = 'type-input'
+  submit.disabled = false
+  fb.className    = 'type-feedback'
+  fb.textContent  = ''
+  nextBtn.style.display = 'none'
+  input.focus()
+}
+
+function renderTypeDone({ done }) {
+  document.getElementById('type-play-wrap').classList.remove('active')
+  document.getElementById('type-result-wrap').style.display = 'flex'
+  const { known, total } = getStats(ALL_ITEMS, itemKey)
+  document.getElementById('type-res-score').textContent = `${done}`
+  document.getElementById('type-res-sub').textContent   = `${done} woorden getypt — ${known}/${total} totaal geleerd`
+}
+
+function showTypeSetup() {
+  document.getElementById('type-setup-wrap').style.display  = ''
+  document.getElementById('type-play-wrap').classList.remove('active')
+  document.getElementById('type-result-wrap').style.display = 'none'
+}
+
+function showTypePlay() {
+  document.getElementById('type-setup-wrap').style.display  = 'none'
+  document.getElementById('type-result-wrap').style.display = 'none'
+  document.getElementById('type-play-wrap').classList.add('active')
+  resetTypeInput()
 }
 
 // ── Moeilijk ─────────────────────────────────────────────
