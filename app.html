@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Norsk">
+<meta name="theme-color" content="#f0ece0">
+<link rel="manifest" href="manifest.json">
+<title>Norsk</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+<!-- Laden indicator -->
+<div class="loading-screen" id="loading">
+  <div class="loading-dots">
+    <div class="loading-dot"></div>
+    <div class="loading-dot"></div>
+    <div class="loading-dot"></div>
+  </div>
+</div>
+
+<!-- App shell (verborgen tot auth klaar) -->
+<div id="app" style="display:none">
+
+  <!-- ══ HOME ════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+    <div class="user-bar">
+      <span class="user-email" id="user-email"></span>
+      <button class="logout-btn" id="logout-btn">Uitloggen</button>
+    </div>
+    <div class="page-head" style="padding-top:0.25rem">
+      <div class="page-title">Norsk <span>leren</span></div>
+      <div class="page-sub" id="home-sub">Voortgang laden...</div>
+    </div>
+    <div class="scroll-area">
+      <div class="home-hero">
+        <div class="hero-pct" id="h-pct">0%</div>
+        <div class="hero-label">Voortgang</div>
+        <div class="hero-bar-wrap"><div class="hero-bar" id="h-pbar" style="width:0%"></div></div>
+        <div class="hero-sub" id="h-sub2">—</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="h-known">0</div><div class="stat-lbl">Geleerd</div></div>
+        <div class="stat-card"><div class="stat-val" id="h-total">0</div><div class="stat-lbl">Totaal</div></div>
+      </div>
+      <div class="section-label">Oefenen</div>
+      <div class="action-card" onclick="goPage('fc')">
+        <div class="ac-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="10" rx="3"/><rect x="8" y="9" width="14" height="10" rx="3"/></svg>
+        </div>
+        <div class="ac-info"><div class="ac-title">Flashcards</div><div class="ac-desc">Foute kaartjes komen terug totdat je ze kent</div></div>
+        <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="action-card" onclick="goPage('quiz')">
+        <div class="ac-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+        </div>
+        <div class="ac-info"><div class="ac-title">Quiz</div><div class="ac-desc">Meerkeuze — fout = retry ronde aan het einde</div></div>
+        <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="action-card" onclick="goPage('diff')">
+        <div class="ac-icon" style="background:rgba(201,112,96,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg>
+        </div>
+        <div class="ac-info"><div class="ac-title">Moeilijke woorden</div><div class="ac-desc" id="h-diff-desc">—</div></div>
+        <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="section-label" style="margin-top:1rem">Woordenschat</div>
+      <div class="action-card" onclick="goPage('ref')">
+        <div class="ac-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </div>
+        <div class="ac-info"><div class="ac-title">Woordenboek</div><div class="ac-desc">Browse, zoek, bekijk voortgang</div></div>
+        <div class="ac-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div id="streak-section" style="display:none">
+        <div class="section-label" style="margin-top:1rem">Beste streak</div>
+        <div class="streak-card">
+          <div class="sc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8b6914" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg>
+          </div>
+          <div><div class="sc-val" id="h-streak">0</div><div class="sc-lbl">Quiz streak record</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REFERENCE ════════════════════════════════ -->
+  <div class="page" id="page-ref">
+    <div class="page-head"><div class="page-title">Woorden<span>boek</span></div><div class="page-sub" id="ref-sub">— items</div></div>
+    <div class="search-box"><input class="search-input" id="ref-search" placeholder="zoek Noors of Nederlands..."></div>
+    <div class="chip-row" id="ref-chips">
+      <button class="chip active" data-filter="all">Alles</button>
+      <button class="chip" data-filter="words">Woorden</button>
+      <button class="chip" data-filter="phrases">Zinnen</button>
+    </div>
+    <div style="flex:1;overflow-y:auto" id="ref-body"></div>
+  </div>
+
+  <!-- ══ FLASHCARDS ════════════════════════════════ -->
+  <div class="page" id="page-fc">
+    <div class="page-head"><div class="page-title">Flash<span>cards</span></div><div class="page-sub">Foute kaartjes herhalen tot je ze kent</div></div>
+    <!-- Setup -->
+    <div id="fc-setup-wrap" class="fc-setup-wrap">
+      <div class="setup-group">
+        <label>Wat wil je oefenen?</label>
+        <div class="option-row" id="fc-cat-opts" data-opt-group>
+          <button class="opt-btn active" data-val="all">Alles</button>
+          <button class="opt-btn" data-val="words">Woorden</button>
+          <button class="opt-btn" data-val="phrases">Zinnen</button>
+          <button class="opt-btn" data-val="unknown">Onbekend</button>
+        </div>
+      </div>
+      <div class="setup-group">
+        <label>Richting</label>
+        <div class="option-row" id="fc-dir-opts" data-opt-group>
+          <button class="opt-btn active" data-val="no-nl">Noors → NL</button>
+          <button class="opt-btn" data-val="nl-no">NL → Noors</button>
+          <button class="opt-btn" data-val="random">Willekeurig</button>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" style="margin-top:0.5rem" id="fc-start-btn">Start flashcards</button>
+    </div>
+    <!-- Play -->
+    <div class="fc-play" id="fc-play-wrap">
+      <div class="fc-topbar">
+        <div class="fc-prog-row">
+          <div class="fc-prog-bar"><div class="fc-prog-fill" id="fc-pbar" style="width:0%"></div></div>
+          <div class="fc-prog-txt" id="fc-ptxt">0/0</div>
+        </div>
+        <div class="fc-badges">
+          <span class="fc-badge remaining" id="fc-b-rem">0 over</span>
+          <span class="fc-badge retry" id="fc-b-retry">0 herhaling</span>
+          <span class="fc-badge done" id="fc-b-done">0 klaar</span>
+        </div>
+      </div>
+      <div class="fc-card-wrap">
+        <div class="fc-card" id="fc-card">
+          <div class="fc-face fc-front">
+            <div class="fc-face-hint" id="ff-hint">Noors</div>
+            <div class="fc-face-word" id="ff-word">—</div>
+            <div class="fc-face-cat" id="ff-cat"></div>
+            <div class="fc-face-tap">klik om te omdraaien</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-face-hint" id="fb-hint">Nederlands</div>
+            <div class="fc-face-word" id="fb-word">—</div>
+            <div class="fc-face-cat" id="fb-cat"></div>
+            <div class="fc-retry-tag" id="fb-retry">herhaling</div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-actions">
+        <div class="fc-action-row">
+          <button class="btn btn-red" id="fc-bad-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Wist niet
+          </button>
+          <button class="btn btn-ghost" id="fc-flip-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+            Omdraaien
+          </button>
+          <button class="btn btn-green" id="fc-good-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>
+            Kende ik!
+          </button>
+        </div>
+        <button class="btn btn-ghost btn-full" id="fc-stop-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug naar instellingen
+        </button>
+      </div>
+    </div>
+    <!-- Done -->
+    <div class="result-screen" id="fc-result-wrap" style="display:none">
+      <div class="result-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      </div>
+      <div class="result-title">Alle kaartjes!</div>
+      <div class="result-score" id="fc-res-score">0/0</div>
+      <div class="result-sub" id="fc-res-sub"></div>
+      <div class="result-btns mt1">
+        <button class="btn btn-primary" id="fc-retry-btn">Opnieuw</button>
+        <button class="btn btn-ghost" id="fc-back-btn">Instellingen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ QUIZ ════════════════════════════════════ -->
+  <div class="page" id="page-quiz">
+    <div class="page-head"><div class="page-title"><span>Quiz</span> modus</div><div class="page-sub">Fout = retry ronde aan het einde</div></div>
+    <!-- Setup -->
+    <div id="quiz-setup-wrap" class="quiz-setup-wrap">
+      <div class="setup-group">
+        <label>Wat wil je oefenen?</label>
+        <div class="option-row" id="qz-cat-opts" data-opt-group>
+          <button class="opt-btn active" data-val="all">Alles</button>
+          <button class="opt-btn" data-val="words">Woorden</button>
+          <button class="opt-btn" data-val="phrases">Zinnen</button>
+          <button class="opt-btn" data-val="unknown">Onbekend</button>
+        </div>
+      </div>
+      <div class="setup-group">
+        <label>Richting</label>
+        <div class="option-row" id="qz-dir-opts" data-opt-group>
+          <button class="opt-btn active" data-val="no-nl">Noors → NL</button>
+          <button class="opt-btn" data-val="nl-no">NL → Noors</button>
+        </div>
+      </div>
+      <div class="setup-group">
+        <label>Aantal vragen</label>
+        <div class="option-row" id="qz-len-opts" data-opt-group>
+          <button class="opt-btn active" data-val="10">10</button>
+          <button class="opt-btn" data-val="20">20</button>
+          <button class="opt-btn" data-val="30">30</button>
+          <button class="opt-btn" data-val="50">50</button>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" style="margin-top:0.5rem" id="quiz-start-btn">Start quiz</button>
+    </div>
+    <!-- Play -->
+    <div class="quiz-play" id="quiz-play-wrap">
+      <div class="quiz-topbar">
+        <div class="quiz-prog-row">
+          <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="qz-pbar" style="width:0%"></div></div>
+          <div class="quiz-prog-txt" id="qz-ptxt">0/0</div>
+        </div>
+        <div class="quiz-badges">
+          <span class="quiz-badge correct" id="qz-b-ok">0 goed</span>
+          <span class="quiz-badge wrong" id="qz-b-wrong">0 fout</span>
+          <span class="quiz-badge retry" id="qz-b-retry">0 herhaling</span>
+        </div>
+      </div>
+      <div class="quiz-body" id="quiz-body"></div>
+      <div class="quiz-next" id="quiz-next-wrap" style="display:none">
+        <button class="btn btn-primary btn-full" id="quiz-next-btn">Volgende →</button>
+      </div>
+      <div style="padding:0 1.25rem 0.5rem">
+        <button class="btn btn-ghost btn-full" id="quiz-stop-btn" style="margin-top:0.25rem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="15 18 9 12 15 6"/></svg>
+          Stoppen
+        </button>
+      </div>
+    </div>
+    <!-- Result -->
+    <div class="result-screen" id="quiz-result-wrap" style="display:none">
+      <div class="result-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      </div>
+      <div class="result-title" id="qr-title">Klaar!</div>
+      <div class="result-score" id="qr-score"></div>
+      <div class="result-sub" id="qr-sub"></div>
+      <div class="result-stats" id="qr-stats"></div>
+      <div class="result-btns">
+        <button class="btn btn-primary" id="quiz-retry-btn">Opnieuw</button>
+        <button class="btn btn-ghost" id="quiz-back-btn">Instellingen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DIFFICULT ════════════════════════════════ -->
+  <div class="page" id="page-diff">
+    <div class="page-head"><div class="page-title">Moeilijke <span>woorden</span></div><div class="page-sub">Woorden die je het vaakst fout hebt</div></div>
+    <div style="flex:1;overflow-y:auto" id="diff-body"></div>
+  </div>
+
+  <!-- ══ NAV ═══════════════════════════════════════ -->
+  <nav id="nav">
+    <button class="nav-item active" data-page="home">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      <span class="nav-lbl">Home</span>
+    </button>
+    <button class="nav-item" data-page="ref">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+      <span class="nav-lbl">Woorden</span>
+    </button>
+    <button class="nav-item" data-page="fc">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="10" rx="3"/><rect x="8" y="9" width="14" height="10" rx="3"/></svg></span>
+      <span class="nav-lbl">Flashcard</span>
+    </button>
+    <button class="nav-item" data-page="quiz">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+      <span class="nav-lbl">Quiz</span>
+    </button>
+    <button class="nav-item" data-page="diff">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A6 6 0 0 0 18 9c0-5-3.5-7.5-3.5-7.5s1 2.5-1 4.5C12 8 12 9 12 9c-.5-2-3-3.5-3-3.5s1 4.5-1.5 5.5c-.5.2-1 .5-1 .5A4 4 0 0 0 8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-.9-.3-1.7-.8-2.3"/></svg></span>
+      <span class="nav-lbl">Moeilijk</span>
+    </button>
+  </nav>
+
+</div><!-- /app -->
+
+<script type="module">
+import { getSession, onAuthChange } from './src/auth.js'
+import { initApp, setupOptButtons } from './src/app.js'
+
+// Controleer sessie bij laden
+const session = await getSession()
+if (!session) { window.location.replace('index.html'); throw new Error('redirect') }
+
+// Toon app
+document.getElementById('loading').style.display = 'none'
+document.getElementById('app').style.display = ''
+
+// Setup opt buttons (delegated)
+setupOptButtons()
+
+// Init app met ingelogde user
+await initApp(session.user)
+
+// Luister naar auth changes (bijv. uitloggen in ander tabblad)
+onAuthChange(s => { if (!s) window.location.replace('index.html') })
+
+// Service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {})
+}
+
+// Maak goPage globaal voor onclick handlers in HTML
+import { initApp as _app } from './src/app.js'
+window.goPage = page => {
+  // Trigger via nav click simulatie
+  document.querySelector(`.nav-item[data-page="${page}"]`)?.click()
+}
+</script>
+</body>
+</html>
