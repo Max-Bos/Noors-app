@@ -454,3 +454,20 @@ body::after {
 .type-feedback.wrong   { background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.3); color:var(--red-l); }
 
 .type-actions { padding:0.75rem 1.25rem; flex-shrink:0; display:flex; flex-direction:column; gap:0.5rem; }
+
+/* ── CATEGORY PROGRESS ── */
+.cat-progress-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:0.75rem 1rem;
+  margin:0 1.25rem 0.5rem;
+}
+.cp-header { display:flex; justify-content:space-between;
+  align-items:center; margin-bottom:0.5rem; }
+.cp-label { font-size:0.82rem; font-weight:700; color:var(--text); }
+.cp-count { font-size:0.7rem; font-weight:700; color:var(--text3);
+  font-family:'JetBrains Mono'; }
+.cp-bar-wrap { height:6px; background:var(--border); border-radius:99px;
+  overflow:hidden; }
+.cp-bar { height:100%; border-radius:99px;
+  background:linear-gradient(90deg, var(--accent-d), var(--accent-l));
+  transition:width 0.5s ease; }

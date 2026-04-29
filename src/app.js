@@ -1,6 +1,6 @@
 import { signOut }                         from './auth.js'
-import { initProgress, getStats, getDifficult, getStreak } from './progress.js'
-import { ALL_ITEMS, itemKey }               from './data.js'
+import { initProgress, getStats, getDifficult, getStreak, isKnown } from './progress.js'
+import { ALL_ITEMS, itemKey, WORD_CATS, PHRASE_CATS }               from './data.js'
 import { startFlashcards, flipCard, answer } from './flashcard.js'
 import { startQuiz, checkAnswer, nextQuestion } from './quiz.js'
 import { startTyping, submitAnswer, nextCard } from './typingmode.js'
@@ -67,6 +67,40 @@ function renderHome() {
   } else {
     ss.style.display = 'none'
   }
+
+  renderCategoryProgress()
+}
+
+// ── Category progress ─────────────────────────────────────
+
+function renderCategoryProgress() {
+  const container = document.getElementById('h-cat-progress')
+  if (!container) return
+
+  const entries = WORD_CATS.map(cat => {
+    const total = cat.items.length
+    const known = cat.items.filter(([no]) => isKnown(`word|${no}`)).length
+    return { label: cat.label, known, total }
+  })
+
+  const phrasesTotal = PHRASE_CATS.reduce((sum, cat) => sum + cat.items.length, 0)
+  const phrasesKnown = PHRASE_CATS.reduce((sum, cat) =>
+    sum + cat.items.filter(([no]) => isKnown(`phrase|${no}`)).length, 0)
+  entries.push({ label: 'Zinnen', known: phrasesKnown, total: phrasesTotal })
+
+  container.innerHTML = entries.map(({ label, known, total }) => {
+    const pct = total ? Math.round(known / total * 100) : 0
+    return `
+      <div class="cat-progress-card">
+        <div class="cp-header">
+          <span class="cp-label">${label}</span>
+          <span class="cp-count">${known}/${total}</span>
+        </div>
+        <div class="cp-bar-wrap">
+          <div class="cp-bar" style="width:${pct}%"></div>
+        </div>
+      </div>`
+  }).join('')
 }
 
 // ── Reference ─────────────────────────────────────────────
