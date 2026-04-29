@@ -1,5 +1,5 @@
 import { signOut }                         from './auth.js'
-import { initProgress, getStats, getDifficult, getStreak, isKnown, getDailyStreak, checkAndUpdateDailyStreak } from './progress.js'
+import { initProgress, getStats, getDifficult, getStreak, isKnown, getDailyStreak, checkAndUpdateDailyStreak, DAILY_KEY } from './progress.js'
 import { ALL_ITEMS, itemKey, WORD_CATS, PHRASE_CATS }               from './data.js'
 import { startFlashcards, flipCard, answer } from './flashcard.js'
 import { startQuiz, checkAnswer, nextQuestion } from './quiz.js'
@@ -499,12 +499,12 @@ function scheduleStudyReminder() {
   const target = new Date(now)
   target.setHours(20, 0, 0, 0)
   if (target <= now) target.setDate(target.getDate() + 1)
-  const msUntil2000 = target - now
+  const msUntil20h = target - now
   setTimeout(() => {
     const today = new Date().toISOString().slice(0, 10)
     let data = { streak: 0, lastStudied: null }
     try {
-      const raw = localStorage.getItem('norsk_daily')
+      const raw = localStorage.getItem(DAILY_KEY)
       if (raw) data = JSON.parse(raw)
     } catch { /* ignore */ }
     if (data.lastStudied !== today) {
@@ -513,7 +513,8 @@ function scheduleStudyReminder() {
         icon: '/icon-192.png'
       })
     }
-  }, msUntil2000)
+    scheduleStudyReminder()
+  }, msUntil20h)
 }
 
 // ── Helpers ───────────────────────────────────────────────

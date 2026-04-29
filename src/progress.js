@@ -87,9 +87,10 @@ window.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') _save()
 })
 
-// ── Dagelijkse streak (localStorage) ────────────────────
+// ── Daily streak (localStorage) ────────────────────
 
 const DAILY_KEY = 'norsk_daily'
+export { DAILY_KEY }
 
 function _todayStr() {
   return new Date().toISOString().slice(0, 10)
