@@ -6,6 +6,7 @@ import { supabase } from './auth.js'
 let _known     = {}   // { 'word|jeg': true, ... }
 let _difficult = {}   // { 'word|jeg': 3, ... }  (aantal keer fout)
 let _streak    = 0
+let _schedule  = {}   // { 'word|jeg': { interval, easeFactor, nextReview, repetitions } }
 let _userId    = null
 let _syncTimer = null
 
@@ -17,7 +18,7 @@ export async function initProgress(userId) {
   // Haal op uit Supabase
   const { data, error } = await supabase
     .from('user_progress')
-    .select('known, difficult, streak')
+    .select('known, difficult, streak, schedule')
     .eq('user_id', userId)
     .single()
 
@@ -25,9 +26,10 @@ export async function initProgress(userId) {
     _known     = data.known     ?? {}
     _difficult = data.difficult ?? {}
     _streak    = data.streak    ?? 0
+    _schedule  = data.schedule  ?? {}
   } else {
     // Nieuwe user of error → begin leeg
-    _known = {}; _difficult = {}; _streak = 0
+    _known = {}; _difficult = {}; _streak = 0; _schedule = {}
   }
 }
 
@@ -37,6 +39,37 @@ export const getKnown     = () => ({ ..._known })
 export const getDifficult = () => ({ ..._difficult })
 export const getStreak    = () => _streak
 export const isKnown      = key => !!_known[key]
+
+export const getSchedule     = () => ({ ..._schedule })
+export const getItemSchedule = key =>
+  _schedule[key] ?? { interval: 1, easeFactor: 2.5, nextReview: _todayStr(), repetitions: 0 }
+
+export function isDue(key) {
+  return getItemSchedule(key).nextReview <= _todayStr()
+}
+
+export function updateSchedule(key, quality) {
+  let { interval, easeFactor, repetitions } = getItemSchedule(key)
+
+  if (quality < 3) {
+    repetitions = 0
+    interval = 1
+  } else {
+    if (repetitions === 0)      interval = 1
+    else if (repetitions === 1) interval = 6
+    else                        interval = Math.round(interval * easeFactor)
+    repetitions++
+  }
+
+  easeFactor = Math.max(1.3, easeFactor + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+
+  const next = new Date()
+  next.setDate(next.getDate() + interval)
+  const nextReview = next.toISOString().slice(0, 10)
+
+  _schedule[key] = { interval, easeFactor, repetitions, nextReview }
+  _scheduleSave()
+}
 
 export function getStats(allItems, itemKey) {
   const known = allItems.filter(i => _known[itemKey(i)]).length
@@ -78,6 +111,7 @@ async function _save() {
     known:     _known,
     difficult: _difficult,
     streak:    _streak,
+    schedule:  _schedule,
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id' })
 }

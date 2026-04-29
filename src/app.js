@@ -163,17 +163,22 @@ function setupFC() {
     showFCPlay()
   }
 
-  document.getElementById('fc-flip-btn').onclick   = flipCard
-  document.getElementById('fc-bad-btn').onclick    = () => doFCAnswer('bad')
-  document.getElementById('fc-good-btn').onclick   = () => doFCAnswer('good')
+  document.getElementById('fc-flip-btn').onclick   = () => {
+    flipCard()
+    document.getElementById('fc-rate-hint').style.display = 'none'
+    document.getElementById('fc-rate-btns').style.display = ''
+  }
+  document.getElementById('fc-hard-btn').onclick   = () => doFCAnswer(2)
+  document.getElementById('fc-good-btn').onclick   = () => doFCAnswer(4)
+  document.getElementById('fc-easy-btn').onclick   = () => doFCAnswer(5)
   document.getElementById('fc-stop-btn').onclick   = showFCSetup
   document.getElementById('fc-retry-btn').onclick  = () => document.getElementById('fc-start-btn').click()
   document.getElementById('fc-back-btn').onclick   = showFCSetup
 }
 
-function doFCAnswer(result) {
+function doFCAnswer(quality) {
   const dir = getOptVal('fc-dir-opts')
-  answer(result, dir,
+  answer(quality, dir,
     data => renderFCCard(data, dir),
     data => renderFCDone(data)
   )
@@ -188,6 +193,9 @@ function renderFCCard({ front, back, frontHint, backHint, cat, isRetry, remainin
   document.getElementById('fb-word').textContent = back
   document.getElementById('fb-cat').textContent  = cat
   document.getElementById('fb-retry').style.display = isRetry ? '' : 'none'
+
+  document.getElementById('fc-rate-hint').style.display = ''
+  document.getElementById('fc-rate-btns').style.display = 'none'
 
   const pct = total ? Math.round(done / total * 100) : 0
   document.getElementById('fc-pbar').style.width   = pct + '%'
