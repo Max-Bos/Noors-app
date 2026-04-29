@@ -1,5 +1,5 @@
 import { signOut }                         from './auth.js'
-import { initProgress, getStats, getDifficult, getStreak, isKnown } from './progress.js'
+import { initProgress, getStats, getDifficult, getStreak, isKnown, getDailyStreak, checkAndUpdateDailyStreak, DAILY_KEY } from './progress.js'
 import { ALL_ITEMS, itemKey, WORD_CATS, PHRASE_CATS }               from './data.js'
 import { startFlashcards, flipCard, answer } from './flashcard.js'
 import { startQuiz, checkAnswer, nextQuestion } from './quiz.js'
@@ -10,9 +10,12 @@ import { renderReference, renderDifficult } from './reference.js'
 
 export async function initApp(user) {
   await initProgress(user.id)
+  checkAndUpdateDailyStreak()
   renderPage('home')
   setupNav()
   setupLogout(user)
+  requestNotificationPermission()
+  scheduleStudyReminder()
 }
 
 // ── Navigatie ─────────────────────────────────────────────
@@ -49,6 +52,7 @@ function renderHome() {
   const diff = getDifficult()
   const dc   = Object.keys(diff).length
   const streak = getStreak()
+  const dailyStreak = getDailyStreak()
 
   document.getElementById('h-known').textContent = known
   document.getElementById('h-total').textContent = total
@@ -59,6 +63,20 @@ function renderHome() {
   document.getElementById('h-diff-desc').textContent = dc
     ? `${dc} woorden die je moeite kosten`
     : 'Nog geen moeilijke woorden'
+
+  // Daily streak card
+  const dsc = document.getElementById('daily-streak-card')
+  if (dsc) {
+    document.getElementById('h-daily-streak').textContent = dailyStreak
+    const lbl = document.getElementById('h-daily-streak-lbl')
+    if (dailyStreak === 0) {
+      lbl.textContent = 'Begin vandaag!'
+    } else if (dailyStreak === 1) {
+      lbl.textContent = 'dag op rij — goed begin!'
+    } else {
+      lbl.textContent = 'dagen op rij 🔥'
+    }
+  }
 
   const ss = document.getElementById('streak-section')
   if (streak > 0) {
@@ -462,6 +480,41 @@ function setupLogout(user) {
     await signOut()
     window.location.href = 'index.html'
   })
+}
+
+// ── Notifications ─────────────────────────────────────────
+
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) return
+  if (localStorage.getItem('norsk_notif_asked')) return
+  setTimeout(async () => {
+    await Notification.requestPermission()
+    localStorage.setItem('norsk_notif_asked', 'true')
+  }, 10000)
+}
+
+function scheduleStudyReminder() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return
+  const now = new Date()
+  const target = new Date(now)
+  target.setHours(20, 0, 0, 0)
+  if (target <= now) target.setDate(target.getDate() + 1)
+  const msUntil20h = target - now
+  setTimeout(() => {
+    const today = new Date().toISOString().slice(0, 10)
+    let data = { streak: 0, lastStudied: null }
+    try {
+      const raw = localStorage.getItem(DAILY_KEY)
+      if (raw) data = JSON.parse(raw)
+    } catch { /* ignore */ }
+    if (data.lastStudied !== today) {
+      new Notification('Norsk leren 🇳🇴', {
+        body: `Je hebt vandaag nog niet geoefend! Je streak is ${data.streak} dagen.`,
+        icon: '/icon-192.png'
+      })
+    }
+    scheduleStudyReminder()
+  }, msUntil20h)
 }
 
 // ── Helpers ───────────────────────────────────────────────

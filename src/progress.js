@@ -48,12 +48,14 @@ export function getStats(allItems, itemKey) {
 export function markKnown(key) {
   _known[key] = true
   delete _difficult[key]
+  markStudiedToday()
   _scheduleSave()
 }
 
 export function markUnknown(key) {
   delete _known[key]
   _difficult[key] = (_difficult[key] ?? 0) + 1
+  markStudiedToday()
   _scheduleSave()
 }
 
@@ -84,3 +86,61 @@ async function _save() {
 window.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') _save()
 })
+
+// ── Daily streak (localStorage) ────────────────────
+
+const DAILY_KEY = 'norsk_daily'
+export { DAILY_KEY }
+
+function _todayStr() {
+  return new Date().toISOString().slice(0, 10)
+}
+
+function _yesterdayStr() {
+  const d = new Date()
+  d.setDate(d.getDate() - 1)
+  return d.toISOString().slice(0, 10)
+}
+
+export function getDailyStreak() {
+  const raw = localStorage.getItem(DAILY_KEY)
+  if (!raw) return 0
+  try { return JSON.parse(raw).streak ?? 0 } catch { return 0 }
+}
+
+export function checkAndUpdateDailyStreak() {
+  const today = _todayStr()
+  const yesterday = _yesterdayStr()
+  let data = { streak: 0, lastStudied: null }
+  try {
+    const raw = localStorage.getItem(DAILY_KEY)
+    if (raw) data = JSON.parse(raw)
+  } catch { /* ignore */ }
+
+  if (data.lastStudied === today) {
+    return { streak: data.streak, isNewDay: false, alreadyStudied: true }
+  }
+
+  let isNewDay = true
+  if (data.lastStudied === yesterday) {
+    data.streak = (data.streak ?? 0) + 1
+  } else {
+    data.streak = 1
+  }
+  data.lastStudied = today
+  localStorage.setItem(DAILY_KEY, JSON.stringify(data))
+  return { streak: data.streak, isNewDay, alreadyStudied: false }
+}
+
+export function markStudiedToday() {
+  const today = _todayStr()
+  let data = { streak: 0, lastStudied: null }
+  try {
+    const raw = localStorage.getItem(DAILY_KEY)
+    if (raw) data = JSON.parse(raw)
+  } catch { /* ignore */ }
+
+  if (data.lastStudied !== today) {
+    checkAndUpdateDailyStreak()
+  }
+}
